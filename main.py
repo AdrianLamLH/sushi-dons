@@ -67,30 +67,30 @@ class GeminiProductTagger:
         "product_id": {
             "category_tags": {
             "tag_name": {
-                "confidence": 0-100,
-                "buy_rate": 0-100,
-                "click_rate": 0-100
+                "confidence": 0-1,
+                "buy_rate": 0-1,
+                "click_rate": 0-1
             }
             },
             "attribute_tags": {
             "tag_name": {
-                "confidence": 0-100,
-                "buy_rate": 0-100,
-                "click_rate": 0-100
+                "confidence": 0-1,
+                "buy_rate": 0-1,
+                "click_rate": 0-1
             }
             },
             "style_tags": {
             "tag_name": {
-                "confidence": 0-100,
-                "buy_rate": 0-100,
-                "click_rate": 0-100
+                "confidence": 0-1,
+                "buy_rate": 0-1,
+                "click_rate": 0-1
             }
             },
             "usage_tags": {
             "tag_name": {
-                "confidence": 0-100,
-                "buy_rate": 0-100,
-                "click_rate": 0-100
+                "confidence": 0-1,
+                "buy_rate": 0-1,
+                "click_rate": 0-1
             }
             }
         }
@@ -101,17 +101,20 @@ class GeminiProductTagger:
         - Category: Product type and subcategories
         - Attributes: Colors, materials, patterns
         - Style: Choose from style categories below
+
         Focus on the style tagging:
         STYLE TAGGING INSTRUCTIONS:
         1. Identify primary style category (2-3 tags)
         2. Add complementary styles (2-3 tags from different categories)
         3. Include emerging/trend potential (1-2 tags)
+
         CROSS-STYLE GUIDELINES:
         - Consider how the item could be styled differently
         - Look for versatile styling possibilities
         - Think about subculture appeal
         - Include both traditional and unexpected pairings
         - Consider social media styling trends
+
         Example for red houndstooth scarf:
         Primary Style:
         • preppy
@@ -129,23 +132,24 @@ class GeminiProductTagger:
         • contradictory terms (grunge formal)
         • forced combinations (cottagecore streetwear)
         • inconsistent aesthetics (y2k victorian)
+
         - Usage: Season, occasion, styling suggestions
         2. Style Categories (choose most relevant and try to make as DIVERSE but still relevant as possible):
-        - Classic: preppy, traditional, collegiate
-        - Modern: streetwear, contemporary, urban
-        - Alternative: gothic, punk, edgy
-        - Aesthetic: dark academia, cottagecore, y2k
-        - Cultural: korean fashion, parisian chic
-        - Luxe: luxury, designer inspired
-        - Casual: smart casual, weekend wear
-        - Trendy: instagram style, tiktok fashion
+        - Classic: (some examples are preppy, traditional, collegiate, etc.)
+        - Modern: (some examples streetwear, contemporary, urban, etc.)
+        - Alternative: (some examples gothic, punk, edgy, etc.)
+        - Aesthetic: (some examples dark academia, cottagecore, y2k, etc.)
+        - Cultural: (some examples korean fashion, parisian chic, etc.)
+        - Luxe: (some examples luxury, designer inspired, etc.)
+        - Casual: (some examples smart casual, weekend wear, etc.)
+        - Trendy: (some examples instagram style, tiktok fashion, etc.)
 
         Requirements:
         - All tags lowercase
         - Max 3 words per tag
         - Only include visible features
         - Provide confidence score (0-1)
-        CONFIDENCE SCORING IS BASED ON THE FOLOWING:
+        CONFIDENCE SCORING IS BASED ON THE FOLLOWING:
             - Visual Confidence: How clearly visible is this attribute?
             - Market Confidence: How well does this match successful tags?
             - Search Confidence: How likely are customers to use this term?
