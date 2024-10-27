@@ -1,4 +1,4 @@
-import google.generativeai as genai
+import openai
 from PIL import Image
 from pathlib import Path
 from typing import Union, Optional, List, Dict
@@ -9,6 +9,8 @@ from tqdm import tqdm
 import numpy as np
 import time
 from datetime import datetime
+import base64
+import io
 load_dotenv()
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -16,317 +18,310 @@ class CustomJSONEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
             return obj.isoformat()
-        # Handle other special types if needed
         try:
             return super().default(obj)
         except TypeError:
             return str(obj)
 
-class GeminiProductTagger:
+class OpenAIProductTagger:
     def __init__(self, api_key: str):
         """
-        Initialize Gemini Vision product tagger with your API key.
+        Initialize OpenAI product tagger with your API key.
         """
-        genai.configure(api_key=api_key)
-        self.base_model = "models/gemini-1.5-flash-001-tuning"
-        self.model = None  # Will store the tuned model
+        openai.api_key = api_key
+        self.vision_model = "gpt-4o-2024-08-06"
+        self.ft_model = None  # Will store the fine-tuned model name
         self.performance_history = []
         
-        # Add the system prompt
-        self.system_prompt = """
-You are an AI fashion product tagger. Analyze products and generate tags in this exact format:
-
-                {
-                "product_id": {
-                    "category_tags": {
-                    "tag_name": {
-                        "confidence": 0-1,
-                        "buy_rate": 0-1,
-                        "click_rate": 0-1
-                    }
-                    },
-                    "attribute_tags": {
-                    "tag_name": {
-                        "confidence": 0-1,
-                        "buy_rate": 0-1,
-                        "click_rate": 0-1
-                    }
-                    },
-                    "style_tags": {
-                    "tag_name": {
-                        "confidence": 0-1,
-                        "buy_rate": 0-1,
-                        "click_rate": 0-1
-                    }
-                    },
-                    "usage_tags": {
-                    "tag_name": {
-                        "confidence": 0-1,
-                        "buy_rate": 0-1,
-                        "click_rate": 0-1
-                    }
-                    }
-                }
-                }
-
-                Rules:
-                1. Generate tags for these categories:
-                - Category: Product type and subcategories
-                - Attributes: Colors, materials, patterns
-                - Style: Choose from style categories below
-
-                Focus on the style tagging:
-                STYLE TAGGING INSTRUCTIONS:
-                1. Identify primary style category (2-3 tags)
-                2. Add complementary styles (2-3 tags from different categories)
-                3. Include emerging/trend potential (1-2 tags)
-
-                CROSS-STYLE GUIDELINES:
-                - Consider how the item could be styled differently
-                - Look for versatile styling possibilities
-                - Think about subculture appeal
-                - Include both traditional and unexpected pairings
-                - Consider social media styling trends
-
-                Example for red houndstooth scarf:
-                Primary Style:
-                • preppy
-                • classic design
-                • british heritage
-                Complementary Styles:
-                • dark academia
-                • korean fashion
-                • streetwear casual
-                Trend Potential:
-                • indie luxe
-                • vintage revival
-                BAD EXAMPLES OF STYLE MIXING:
-                • total opposites without connection (punk princess)
-                • contradictory terms (grunge formal)
-                • forced combinations (cottagecore streetwear)
-                • inconsistent aesthetics (y2k victorian)
-
-                - Usage: Season, occasion, styling suggestions
-                2. Style Categories (choose most relevant and try to make as DIVERSE but still relevant as possible):
-                - Classic: (some examples are preppy, traditional, collegiate, etc.)
-                - Modern: (some examples streetwear, contemporary, urban, etc.)
-                - Alternative: (some examples gothic, punk, edgy, etc.)
-                - Aesthetic: (some examples dark academia, cottagecore, y2k, etc.)
-                - Cultural: (some examples korean fashion, parisian chic, etc.)
-                - Luxe: (some examples luxury, designer inspired, etc.)
-                - Casual: (some examples smart casual, weekend wear, etc.)
-                - Trendy: (some examples instagram style, tiktok fashion, etc.)
-
-                Requirements:
-                - All tags lowercase
-                - Max 3 words per tag
-                - Only include visible features
-                - Provide confidence score (0-1)
-                CONFIDENCE SCORING IS BASED ON THE FOLLOWING:
-                    - Visual Confidence: How clearly visible is this attribute?
-                    - Market Confidence: How well does this match successful tags?
-                    - Search Confidence: How likely are customers to use this term?
-                - Buy rate (0-1) and click rate (0-1), default value if nothing is passed in is 0
-                - No subjective terms
-                - No vague descriptions
-
-                GOOD EXAMPLE:
-                {
-                "red_scarf_1": {
-                    "category_tags": {
-                    "scarf": {
-                        "confidence": .98,
-                        "buy_rate": .85,
-                        "click_rate": .90
-                    },
-                    "winter_accessory": {
-                        "confidence": .95,
-                        "buy_rate": .80,
-                        "click_rate": .85
-                    }
-                    },
-                    "attribute_tags": {
-                    "crimson": {
-                        "confidence": .95,
-                        "buy_rate": .75,
-                        "click_rate": .80
-                    },
-                    "wool_blend": {
-                        "confidence": .90,
-                        "buy_rate": .70,
-                        "click_rate": .75
-                    },
-                    "houndstooth": {
-                        "confidence": .98,
-                        "buy_rate": .85,
-                        "click_rate": .90
-                    }
-                    },
-                    "style_tags": {
-                    "preppy": {
-                        "confidence": .90,
-                        "buy_rate": .80,
-                        "click_rate": .85
-                    },
-                    "classic": {
-                        "confidence": .95,
-                        "buy_rate": .85,
-                        "click_rate": .90
-                    }
-                    },
-                    "usage_tags": {
-                    "winter": {
-                        "confidence": .98,
-                        "buy_rate": .90,
-                        "click_rate": .95
-                    },
-                    "office": {
-                        "confidence": .85,
-                        "buy_rate": .75,
-                        "click_rate": .80
-                    }
-                    }
-                }
-                }
-
-                Why this is good:
-                - Specific, searchable tags
-                - Proper JSON structure
-                - Accurate confidence scores
-                - Realistic buy/click rates
-                - Clear categorization
-                - No subjective terms
-
-                BAD EXAMPLE:
-                {
-                "scarf_thing": {
-                    "category_tags": {
-                    "neck_item": {
-                        "confidence": .50,
-                        "buy_rate": .30,
-                        "click_rate": .20
-                    },
-                    "wrappy_scarf": {
-                        "confidence": .40,
-                        "buy_rate": .25,
-                        "click_rate": .15
-                    }
-                    },
-                    "attribute_tags": {
-                    "reddish": {
-                        "confidence": .60,
-                        "buy_rate": .20,
-                        "click_rate": .30
-                    },
-                    "probably_wool": {
-                        "confidence": .30,
-                        "buy_rate": .15,
-                        "click_rate": .25
-                    }
-                    },
-                    "style_tags": {
-                    "very_nice": {
-                        "confidence": .20,
-                        "buy_rate": .10,
-                        "click_rate": .15
-                    },
-                    "fashionable": {
-                        "confidence": .25,
-                        "buy_rate": .20,
-                        "click_rate": .10
-                    }
-                    }
-                }
-                }
-
-                Why this is bad:
-                - Vague, unsearchable tags
-                - Made-up terms
-                - Subjective descriptions
-                - Unrealistic confidence scores
-                - Missing categories
-                - Poor JSON structure
-
-                When tagging a product, analyze it and output the structured JSON with all required scores and metrics. Ensure every tag is searchable and market-relevant.
-                """
+        # # Add the system prompt
+        # self.system_prompt = """You are an AI fashion product tagger. Analyze products and generate tags."""
         
-    def prepare_training_data(self, image_paths: List[str], ground_truth_tags: List[Dict]) -> List[Dict]:
+        # # Add the user prompt template
+        # self.user_prompt_template = """Analyze this fashion product and generate tags in the following format:
+        # {
+        #     "product_id": {
+        #         "category_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}},
+        #         "attribute_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}},
+        #         "style_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}},
+        #         "usage_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}}
+        #     }
+        # }"""
+        self.json_template = '''
+    {
+        "product_id": {
+            "category_tags": {
+                "tag_name": {
+                    "confidence": 0-1,
+                    "buy_rate": 0-1,
+                    "click_rate": 0-1
+                }
+            },
+            "attribute_tags": {
+                "tag_name": {
+                    "confidence": 0-1,
+                    "buy_rate": 0-1,
+                    "click_rate": 0-1
+                }
+            },
+            "style_tags": {
+                "tag_name": {
+                    "confidence": 0-1,
+                    "buy_rate": 0-1,
+                    "click_rate": 0-1
+                }
+            },
+            "usage_tags": {
+                "tag_name": {
+                    "confidence": 0-1,
+                    "buy_rate": 0-1,
+                    "click_rate": 0-1
+                }
+            }
+        }
+    }'''
+
+        # Define the good example separately
+        self.good_example = '''
+{
+    "red_scarf_1": {
+        "category_tags": {
+            "scarf": {
+                "confidence": 0.98,
+                "buy_rate": 0.85,
+                "click_rate": 0.90
+            },
+            "winter_accessory": {
+                "confidence": 0.95,
+                "buy_rate": 0.80,
+                "click_rate": 0.85
+            }
+        },
+        "attribute_tags": {
+            "crimson": {
+                "confidence": 0.95,
+                "buy_rate": 0.75,
+                "click_rate": 0.80
+            },
+            "wool_blend": {
+                "confidence": 0.90,
+                "buy_rate": 0.70,
+                "click_rate": 0.75
+            },
+            "houndstooth": {
+                "confidence": 0.98,
+                "buy_rate": 0.85,
+                "click_rate": 0.90
+            }
+        },
+        "style_tags": {
+            "preppy": {
+                "confidence": 0.90,
+                "buy_rate": 0.80,
+                "click_rate": 0.85
+            },
+            "classic": {
+                "confidence": 0.95,
+                "buy_rate": 0.85,
+                "click_rate": 0.90
+            }
+        },
+        "usage_tags": {
+            "winter": {
+                "confidence": 0.98,
+                "buy_rate": 0.90,
+                "click_rate": 0.95
+            },
+            "office": {
+                "confidence": 0.85,
+                "buy_rate": 0.75,
+                "click_rate": 0.80
+            }
+        }
+    }
+}'''
+
+        # Define the bad example separately
+        self.bad_example = '''
+{
+    "scarf_thing": {
+        "category_tags": {
+            "neck_item": {
+                "confidence": 0.50,
+                "buy_rate": 0.30,
+                "click_rate": 0.20
+            },
+            "wrappy_scarf": {
+                "confidence": 0.40,
+                "buy_rate": 0.25,
+                "click_rate": 0.15
+            }
+        },
+        "attribute_tags": {
+            "reddish": {
+                "confidence": 0.60,
+                "buy_rate": 0.20,
+                "click_rate": 0.30
+            },
+            "probably_wool": {
+                "confidence": 0.30,
+                "buy_rate": 0.15,
+                "click_rate": 0.25
+            }
+        },
+        "style_tags": {
+            "very_nice": {
+                "confidence": 0.20,
+                "buy_rate": 0.10,
+                "click_rate": 0.15
+            },
+            "fashionable": {
+                "confidence": 0.25,
+                "buy_rate": 0.20,
+                "click_rate": 0.10
+            }
+        }
+    }
+}'''
+
+        # Construct the prompt using regular string concatenation
+        self.system_prompt = (
+            "You are an AI fashion product tagger. Analyze products and generate tags in this exact format:\n\n"
+            f"{self.json_template}\n\n"
+            "Rules:\n"
+            "1. Generate tags for these categories:\n"
+            "- Category: Product type and subcategories\n"
+            "- Attributes: Colors, materials, patterns\n"
+            "- Style: Choose from style categories below\n\n"
+            "Focus on the style tagging:\n"
+            "STYLE TAGGING INSTRUCTIONS:\n"
+            "1. Identify primary style category (2-3 tags)\n"
+            "2. Add complementary styles (2-3 tags from different categories)\n"
+            "3. Include emerging/trend potential (1-2 tags)\n\n"
+            "CROSS-STYLE GUIDELINES:\n"
+            "- Consider how the item could be styled differently\n"
+            "- Look for versatile styling possibilities\n"
+            "- Think about subculture appeal\n"
+            "- Include both traditional and unexpected pairings\n"
+            "- Consider social media styling trends\n\n"
+            "Style Categories (choose most relevant and try to make as DIVERSE but still relevant as possible):\n"
+            "- Classic: (preppy, traditional, collegiate, etc.)\n"
+            "- Modern: (streetwear, contemporary, urban, etc.)\n"
+            "- Alternative: (gothic, punk, edgy, etc.)\n"
+            "- Aesthetic: (dark academia, cottagecore, y2k, etc.)\n"
+            "- Cultural: (korean fashion, parisian chic, etc.)\n"
+            "- Luxe: (luxury, designer inspired, etc.)\n"
+            "- Casual: (smart casual, weekend wear, etc.)\n"
+            "- Trendy: (instagram style, tiktok fashion, etc.)\n\n"
+            "Requirements:\n"
+            "- All tags lowercase\n"
+            "- Max 3 words per tag\n"
+            "- Only include visible features\n"
+            "- Provide confidence score (0-1)\n"
+            "- Buy rate (0-1) and click rate (0-1)\n"
+            "- No subjective terms\n"
+            "- No vague descriptions\n\n"
+            f"GOOD EXAMPLE:\n{self.good_example}\n\n"
+            f"BAD EXAMPLE:\n{self.bad_example}\n\n"
+            "When tagging a product, analyze it and output the structured JSON with all required scores and metrics. "
+            "Ensure every tag is searchable and market-relevant."
+        )
+        self.user_prompt_template = (
+            "Analyze this fashion product and generate tags in the following format:\n"
+            f"{self.json_template}"
+        )
+
+    # def _encode_image(self, image_path: Union[str, Path]) -> str:
+    #     """Convert image to base64 string."""
+    #     with Image.open(image_path) as img:
+    #         if img.mode != 'RGB':
+    #             img = img.convert('RGB')
+    #         buffered = io.BytesIO()
+    #         img.save(buffered, format="JPEG")
+    #         return base64.b64encode(buffered.getvalue()).decode('utf-8')
+
+    def prepare_training_data(self, image_urls: List[str], ground_truth_tags: List[Dict]) -> List[Dict]:
         """
-        Prepare training data with structured prompt.
+        Prepare training data in OpenAI's fine-tuning format.
         """
         training_data = []
         print("Processing training examples...")
         
-        for idx, (image_path, ground_truth) in enumerate(zip(image_paths, ground_truth_tags)):
+        for idx, (image_url, ground_truth) in enumerate(zip(image_urls, ground_truth_tags)):
             try:
-                # For image examples
-                with open(image_path, 'rb') as img_file:
-                    training_example = {
-                        "text_input": (
-                            self.system_prompt
-                        ),
-                        "image_input": img_file.read(),
-                        "output": json.dumps(ground_truth, indent=2)  # Changed back to 'output'
+                # # Get image description using GPT-4V
+                # image_b64 = self._encode_image(image_path)
+                
+                # Format the training example according to OpenAI's requirements
+                training_example = {
+                    "messages": [
+                    {
+                        "role": "system",
+                        "content": self.system_prompt
+                    },
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": self.user_prompt_template
+                            },
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": image_url
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "role": "assistant",
+                        "content": json.dumps(ground_truth)
                     }
+                    ]
+                }
+                
+                # Validate the example
+                if self._validate_training_example(training_example):
                     training_data.append(training_example)
-                    print(f"Processed example {idx + 1}: {image_path}")
-            
+                    print(f"Processed example {idx + 1}: {image_url}")
+                else:
+                    print(f"Skipped invalid example {idx + 1}: {image_url}")
+                
             except Exception as e:
-                print(f"Error processing {image_path}: {str(e)}")
+                print(f"Error processing {image_url}: {str(e)}")
         
-        # # Add text-only example
-        # try:
-        #     text_example = {
-        #         "text_input": (
-        #             "Generate fashion product tags in this format:\n"
-        #             f"{json.dumps(self.example_output, indent=2)}"
-        #         ),
-        #         "output": json.dumps(self.example_output, indent=2)  # Changed back to 'output'
-        #     }
-        #     training_data.append(text_example)
-        #     print("Added format example")
-            
-        # except Exception as e:
-        #     print(f"Error adding format example: {str(e)}")
-        
-        print(f"Total training examples prepared: {len(training_data)}")
         return training_data
 
-    def validate_training_data(self, training_data: List[Dict]) -> bool:
+    def _validate_training_example(self, example: Dict) -> bool:
         """
-        Validate training data format before fine-tuning.
+        Validate a training example meets OpenAI's requirements.
         """
-        print("\nValidating training data format...")
-        
         try:
-            for idx, example in enumerate(training_data):
-                print(f"\nValidating example {idx + 1}:")
+            # Check basic structure
+            if not isinstance(example, dict) or "messages" not in example:
+                return False
+            
+            # Check messages format
+            messages = example["messages"]
+            if not isinstance(messages, list) or len(messages) != 3:
+                return False
+            
+            # Check each message
+            required_roles = ["system", "user", "assistant"]
+            for msg, role in zip(messages, required_roles):
+                if not isinstance(msg, dict) or msg.get("role") != role or "content" not in msg:
+                    return False
                 
-                # Check required fields
-                if "text_input" not in example:
-                    print(f"Error: Example {idx + 1} missing text_input")
+                # Check content isn't too long (OpenAI has a 32k token limit)
+                if len(msg["content"]) > 32000:  # Approximate token limit
                     return False
-                if "output" not in example:  # Changed to check for 'output'
-                    print(f"Error: Example {idx + 1} missing output")
-                    return False
-                    
-                # Check data types
-                if not isinstance(example["text_input"], str):
-                    print(f"Error: Example {idx + 1} text_input must be string")
-                    return False
-                if not isinstance(example["output"], str):  # Changed to check for 'output'
-                    print(f"Error: Example {idx + 1} output must be string")
-                    return False
-                    
-                # If image included, check format
-                if "image_input" in example:
-                    if not isinstance(example["image_input"], bytes):
-                        print(f"Error: Example {idx + 1} image_input must be bytes")
-                        return False
-                
-                print(f"Example {idx + 1} valid")
-                
-            print("\nAll training examples valid!")
+            
+            # Validate assistant response is valid JSON
+            try:
+                json.loads(messages[2]["content"])
+            except json.JSONDecodeError:
+                return False
+            
             return True
             
         except Exception as e:
@@ -336,202 +331,247 @@ You are an AI fashion product tagger. Analyze products and generate tags in this
     def fine_tune(
         self,
         training_data: List[Dict],
-        epoch_count: int = 20,
-        batch_size: int = None,
-        learning_rate: float = 0.001,
-        model_name: str = "product_tagger"
+        model_name: str = "gpt-4o-2024-08-06"
     ) -> Dict:
-        """Fine-tune the model with structured prompts."""
+        """Fine-tune a model using properly formatted training data."""
         try:
-            print("Starting model fine-tuning...")
-            num_examples = len(training_data)
-            print(f"Training examples: {num_examples}")
+            print("Starting fine-tuning process...")
             
-            # Automatically set batch size based on number of examples
-            if batch_size is None or batch_size > num_examples:
-                batch_size = max(1, min(num_examples, 2))
-                print(f"Adjusted batch size to {batch_size} based on number of examples")
+            # Validate training data
+            if not training_data:
+                raise ValueError("No valid training data provided")
             
-            # Validate training data format
-            if not self.validate_training_data(training_data):
-                raise ValueError("Invalid training data format")
+            print(f"Uploading {len(training_data)} training examples...")
             
-            # Create tuned model
-            operation = genai.create_tuned_model(
-                display_name=model_name,
-                source_model=self.base_model,
-                epoch_count=epoch_count,
-                batch_size=batch_size,
-                learning_rate=learning_rate,
-                training_data=training_data
+            # Upload training data
+            file_id = self._upload_training_data(training_data)
+            print(f"Training file uploaded successfully. File ID: {file_id}")
+            
+            # Create fine-tuning job
+            print("Creating fine-tuning job...")
+            response = openai.fine_tuning.jobs.create(
+                training_file=file_id,
+                model=model_name,
+                hyperparameters={
+                    "n_epochs": 3  # Start with a small number of epochs
+                }
             )
             
-            print("\nTraining in progress...")
-            print(f"Configuration:")
-            print(f"- Epochs: {epoch_count}")
-            print(f"- Batch size: {batch_size}")
-            print(f"- Learning rate: {learning_rate}")
+            job_id = response.id
+            print(f"Fine-tuning job created: {job_id}")
             
-            for status in operation.wait_bar():
-                time.sleep(10)
-                print(f"Training status: {status}")
+            # Monitor fine-tuning progress
+            print("Monitoring fine-tuning progress...")
+            while True:
+                job_status = openai.fine_tuning.jobs.retrieve(job_id)
+                status = job_status.status
                 
-            result = operation.result()
-            print("\nTraining completed!")
-            print(f"Model name: {result.name}")
+                print(f"Status: {status}")
+                
+                if status == "succeeded":
+                    self.ft_model = job_status.fine_tuned_model
+                    print(f"Fine-tuning completed successfully!")
+                    print(f"Fine-tuned model ID: {self.ft_model}")
+                    break
+                elif status in ["failed", "cancelled"]:
+                    error_message = getattr(job_status, 'error', 'Unknown error')
+                    raise Exception(f"Fine-tuning failed: {error_message}")
+                
+                time.sleep(30)
             
-            # Store the tuned model
-            self.model = genai.GenerativeModel(model_name=result.name)
-            
-            # Clean the result for JSON serialization
-            clean_result = {
-                "model_name": result.name,
-                "metrics": []
+            return {
+                "model_name": self.ft_model,
+                "status": "completed",
+                "training_file": file_id,
+                "job_id": job_id
             }
             
-            if hasattr(result.tuning_task, 'snapshots'):
-                clean_result["metrics"] = [
-                    {
-                        "epoch": snapshot.get("epoch"),
-                        "mean_loss": snapshot.get("mean_loss"),
-                        "timestamp": snapshot.get("timestamp").isoformat() if snapshot.get("timestamp") else None
-                    }
-                    for snapshot in result.tuning_task.snapshots
-                ]
+        except Exception as e:
+            print(f"Error during fine-tuning: {str(e)}")
+            return {
+                "error": str(e),
+                "status": "failed"
+            }
+
+    def _upload_training_data(self, training_data: List[Dict]) -> str:
+        """Upload training data to OpenAI in the correct JSONL format."""
+        try:
+            # Convert to JSONL format
+            jsonl_content = ""
+            for example in training_data:
+                jsonl_content += json.dumps(example) + "\n"
             
-            return clean_result
+            # Save to temporary file
+            temp_file = "training_data.jsonl"
+            with open(temp_file, "w") as f:
+                f.write(jsonl_content)
+            
+            # Upload file
+            with open(temp_file, "rb") as f:
+                response = openai.files.create(
+                    file=f,
+                    purpose="fine-tune"
+                )
+            
+            # Clean up
+            os.remove(temp_file)
+            
+            return response.id
             
         except Exception as e:
-            print(f"\nError during fine-tuning: {str(e)}")
-            print("\nDebug information:")
-            print("Training data keys in first example:", list(training_data[0].keys()) if training_data else "No data")
-            print(f"Number of examples: {len(training_data)}")
-            print(f"Attempted batch size: {batch_size}")
-            return {"error": str(e)}
-        
-    def load_image(self, image_path: Union[str, Path]) -> Image.Image:
-        """Load an image from a file path."""
-        return Image.open(image_path)
+            print(f"Error uploading training data: {str(e)}")
+            raise
 
-    def _clean_text_to_json(self, text: str) -> dict:
-        """
-        Clean text response and attempt to convert it to JSON.
-        Handles cases where the response includes markdown or extra text.
-        """
-        # Try to find JSON-like content between curly braces
+    def generate_tags(self, image_url, include_confidence: bool = False) -> Dict:
+        """Generate tags using either GPT-4V or the fine-tuned model."""
         try:
-            start_idx = text.find('{')
-            end_idx = text.rfind('}') + 1
-            if start_idx >= 0 and end_idx > 0:
-                json_str = text[start_idx:end_idx]
-                return json.loads(json_str)
-        except:
-            pass
-        
-        # If JSON parsing fails, create a structured dictionary from the text
-        try:
-            lines = text.split('\n')
-            tags = {}
-            current_category = None
+            # # Encode image
+            # image_b64 = self._encode_image(image_path)
             
-            for line in lines:
-                line = line.strip()
-                if line and ':' in line:
-                    current_category = line.split(':')[0].lower().strip().replace(' ', '_')
-                    tags[current_category] = []
-                elif line and current_category and line[0] in ['-', '*', '•']:
-                    tags[current_category].append(line.lstrip('- *•').strip())
-            
-            return tags if tags else {"error": "Could not parse response"}
-        except:
-            return {"error": "Failed to parse response"}
+            # Define the JSON structure template separately
 
-    def generate_tags(self, image_path: Union[str, Path], include_confidence: bool = False) -> Dict:
-        try:
-            if not self.model:
-                raise ValueError("No fine-tuned model available. Please run fine_tune() first.")
-            
-            print("Preparing to generate tags...")
-            
-            # Load image
-            image = Image.open(image_path)
-
-            # Format content for generation
-            content = [self.system_prompt,image
-            ]
-            
-            # Generate with specific configuration
-            generation_config = genai.GenerationConfig(
-                temperature=0.7,  # Increased for more creative responses
-                top_p=0.95,      # Increased for more variety
-                top_k=40,
-                max_output_tokens=2048,
-                candidate_count=1,
-                stop_sequences=["}"]  # Stop at the end of JSON
+            # Use GPT-4V for initial analysis
+            response = openai.chat.completions.create(
+                model=self.ft_model,
+                messages=[
+                    {
+                        "role": "system",
+                        "content": self.system_prompt
+                    },
+                    {
+                        "role": "user",
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": self.user_prompt_template
+                            },
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": image_url
+                                }
+                            }
+                        ]
+                    }
+                ],
+                max_tokens=2000,
+                temperature=0.7,
+                response_format={ "type": "json_object" }
             )
             
-            print("Generating tags...")
-            print("Model:", self.model.model_name)
-            print("Image:", image)
-            print("Content:", content)
-            print("Config:", generation_config)
-            response = self.model.generate_content(
-                content,
-                generation_config=generation_config
-            )
-            
-            # Process and clean response
-            if not hasattr(response, 'text') or not response.text:
-                return {
-                    "error": "No valid response generated",
-                    "raw_response": str(response) if hasattr(response, 'text') else "No response"
-                }
-            
-            # Clean and parse JSON
+            # Extract and validate JSON response
             try:
-                print("Raw response:", response.text)  # For debugging
-                tags = self._clean_text_to_json(response.text)
+                response_content = response.choices[0].message.content
+                print("Raw response:", response_content)  # Debug print
                 
-                # Validate scores
-                for category in tags.values():
-                    for tag_data in category.values():
-                        if isinstance(tag_data, dict):
-                            for metric in ['confidence', 'buy_rate', 'click_rate']:
-                                if tag_data.get(metric, -1) < 0 or tag_data.get(metric, 2) > 1:
-                                    tag_data[metric] = max(0.0, min(1.0, tag_data[metric]))
+                # Clean the response if needed
+                cleaned_content = self._clean_json_response(response_content)
+                tags = json.loads(cleaned_content)
+                
+                # Validate the structure
+                if not self._validate_tag_structure(tags):
+                    raise ValueError("Invalid tag structure in response")
                 
                 if include_confidence:
                     return {
                         "tags": tags,
-                        "model_name": self.model.model_name
+                        "model_name": self.ft_model
                     }
                 return tags
                 
             except json.JSONDecodeError as e:
                 print(f"JSON parsing error: {str(e)}")
-                print("Raw response:", response.text)
-                return {
-                    "error": f"Failed to parse JSON: {str(e)}",
-                    "raw_response": response.text
-                }
+                print(f"Problematic content: {response_content}")
+                return {"error": f"Invalid JSON in response: {str(e)}"}
                 
         except Exception as e:
             print(f"Error generating tags: {str(e)}")
-            return {
-                "error": f"Generation failed: {str(e)}",
-                "raw_response": getattr(response, 'text', "No response") if 'response' in locals() else "No response"
-            }
-        
+            return {"error": f"Generation failed: {str(e)}"}
+
+    def _clean_json_response(self, response: str) -> str:
+        """Clean the response to ensure valid JSON."""
+        try:
+            # Remove any markdown formatting if present
+            if response.startswith("```json"):
+                response = response.replace("```json", "").replace("```", "")
+            elif response.startswith("```"):
+                response = response.replace("```", "")
+                
+            # Remove any leading/trailing whitespace
+            response = response.strip()
+            
+            # If the response starts with a comment or explanation, find the first '{'
+            if not response.startswith("{"):
+                start_idx = response.find("{")
+                if start_idx != -1:
+                    response = response[start_idx:]
+                    
+            # If the response has trailing text, find the last '}'
+            if not response.endswith("}"):
+                end_idx = response.rfind("}") + 1
+                if end_idx > 0:
+                    response = response[:end_idx]
+            
+            # Validate that it's parseable
+            json.loads(response)  # This will raise an error if invalid
+            return response
+            
+        except Exception as e:
+            print(f"Error cleaning JSON response: {str(e)}")
+            raise
+
+    def _validate_tag_structure(self, tags: Dict) -> bool:
+        """Validate the structure of the generated tags."""
+        try:
+            # Check if there's at least one product
+            if not isinstance(tags, dict) or len(tags) == 0:
+                return False
+                
+            # Check each product's structure
+            for product_id, product_data in tags.items():
+                required_categories = ['category_tags', 'attribute_tags', 'style_tags', 'usage_tags']
+                
+                # Check if all required categories exist
+                if not all(category in product_data for category in required_categories):
+                    return False
+                    
+                # Check each category's structure
+                for category in required_categories:
+                    if not isinstance(product_data[category], dict):
+                        return False
+                        
+                    # Check each tag's structure
+                    for tag_name, tag_data in product_data[category].items():
+                        required_fields = ['confidence', 'buy_rate', 'click_rate']
+                        
+                        # Check if all required fields exist
+                        if not all(field in tag_data for field in required_fields):
+                            return False
+                            
+                        # Validate score ranges
+                        for field in required_fields:
+                            score = tag_data[field]
+                            if not isinstance(score, (int, float)) or score < 0 or score > 1:
+                                return False
+            
+            return True
+            
+        except Exception as e:
+            print(f"Error validating tag structure: {str(e)}")
+            return False
+
+# Previous imports and classes remain the same, only updating the main() function
 
 def main():
     try:
         # Initialize tagger
-        tagger = GeminiProductTagger(os.environ.get("GOOGLE_API_KEY"))
-        
-        # Expanded training examples with consistent wool scoring
+        tagger = OpenAIProductTagger(os.environ.get("OPENAI_API_KEY"))
+        shop_image_url = "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIC4x92d9EDpce7qbnGFxrTc7FcYa%2BfgPalEPRkSwFX%2FTAiAIT2dhexJrVldf54y8K8AQOHuR0hk%2FtKdsqJYTz%2F58WyrHAwgmEAAaDDg4NjQzNjk1NjUzMiIMXc6yL7UsvRscBcR2KqQD55ZN7BfFUsAE%2FydKKR49I3yw8sa9t6iZPYfzY7pWFGdt6FiOZgP%2FtI41uIIOuWrGRAs3u7kKSZ57Ss1h7VcFrey8l2BmHMtC7kDWvrYhNc%2FZ8vXZy5CUHEIhxEBVL9Eq7YRbI1FetRGCgPy2S%2Fbbqr%2FVfDLS%2B3dQIAODNzh3iFylVHkwgmSWaFGXvj2yDuwBLhoq1KVNRMt%2Fs2Y8WwV3GZC6Q0pimPoGaDwV%2BBprG0E1wMmDADWeRxxXckyzKfHJe46MrS27Y0vyhlW5eQDDWxGQNUjK9VvogntY6phzztCqky0W2DnGZjGHVTJjKLts%2BtffihwWc7AlWWocbnZMjW7RS%2FWH8K9N8wvSGL2qBHrYjCauruODNhHF8B5bPbTqwHj8apbZe83iPKWw6bWbMVlr6ESTN2r0%2B4bTV82Et7Q%2FXNQd3IUWfMxWtWzTm9%2BS20CBxbwQg5%2F%2Bju7fMvvbgh8Owg%2BHWRKkqD8RdCGg8GQh1H2WyV1tLYGaR1eXuIrFF6xnPj9HCHTxdhJfER9xGudHtyELcM5CdrCMmgWI14sZWlUmMLHn9rgGOuUCtAskpCOPoU7JTTktA8NaiJkU2FDpLEO5TklIcT7%2FGYUvYnszWW%2FyDx%2FLezwAUwmdX7SWNctOLFLlEri6coFhmJGTG1ZmXo3vcHFtx26kD0d5vtqdNupYncKeo5ZB%2F%2BEH%2F9ecc4lswOnGq7LAjr8nr5FfxiF%2BiSeQdI1zScSamMVzU6fhQ6HpckT%2FYe9wDZF3mPPys9bvEl8jpZ1FRViqp%2F%2FDRPG2MNe5e67CuZsQHz481%2BLWGA%2B28%2BTNeWGqtbM%2BBRzGFh4iIjPcuAWTa5eLgM6f1MfAMedDcr2r%2BLo%2FtyvtHyCyyhlb2eaPDvvGtFLOjAY%2FTqvts%2BdQX6gkeBtA3LKE%2FR%2BpPlEfhlj1GJ8QccKdnZj1K%2F9qPg%2Bc0dTeKMEl12SHX3gPCz61v0pTOHWAq765fEHFsSYURQJ2kXeZfm9k%2BobmCMeV8pfO%2BgYMOI34J2FgaBBtqe38R8QcLjfcGWtQGQru&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2KEOLBBXN%2F20241027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241027T043049Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=dddfa6a8028d3b6ebd0fea14c01cec86bcbd9d900cff64ad48e0eec2ec69a8bc"
+        shop_image_url2 = "https://test-sushi-122.s3.us-east-1.amazonaws.com/BM17064.473BLK_BLACK-STORM-STOPPER-BOMBER-JACKET.jpeg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIC4x92d9EDpce7qbnGFxrTc7FcYa%2BfgPalEPRkSwFX%2FTAiAIT2dhexJrVldf54y8K8AQOHuR0hk%2FtKdsqJYTz%2F58WyrHAwgmEAAaDDg4NjQzNjk1NjUzMiIMXc6yL7UsvRscBcR2KqQD55ZN7BfFUsAE%2FydKKR49I3yw8sa9t6iZPYfzY7pWFGdt6FiOZgP%2FtI41uIIOuWrGRAs3u7kKSZ57Ss1h7VcFrey8l2BmHMtC7kDWvrYhNc%2FZ8vXZy5CUHEIhxEBVL9Eq7YRbI1FetRGCgPy2S%2Fbbqr%2FVfDLS%2B3dQIAODNzh3iFylVHkwgmSWaFGXvj2yDuwBLhoq1KVNRMt%2Fs2Y8WwV3GZC6Q0pimPoGaDwV%2BBprG0E1wMmDADWeRxxXckyzKfHJe46MrS27Y0vyhlW5eQDDWxGQNUjK9VvogntY6phzztCqky0W2DnGZjGHVTJjKLts%2BtffihwWc7AlWWocbnZMjW7RS%2FWH8K9N8wvSGL2qBHrYjCauruODNhHF8B5bPbTqwHj8apbZe83iPKWw6bWbMVlr6ESTN2r0%2B4bTV82Et7Q%2FXNQd3IUWfMxWtWzTm9%2BS20CBxbwQg5%2F%2Bju7fMvvbgh8Owg%2BHWRKkqD8RdCGg8GQh1H2WyV1tLYGaR1eXuIrFF6xnPj9HCHTxdhJfER9xGudHtyELcM5CdrCMmgWI14sZWlUmMLHn9rgGOuUCtAskpCOPoU7JTTktA8NaiJkU2FDpLEO5TklIcT7%2FGYUvYnszWW%2FyDx%2FLezwAUwmdX7SWNctOLFLlEri6coFhmJGTG1ZmXo3vcHFtx26kD0d5vtqdNupYncKeo5ZB%2F%2BEH%2F9ecc4lswOnGq7LAjr8nr5FfxiF%2BiSeQdI1zScSamMVzU6fhQ6HpckT%2FYe9wDZF3mPPys9bvEl8jpZ1FRViqp%2F%2FDRPG2MNe5e67CuZsQHz481%2BLWGA%2B28%2BTNeWGqtbM%2BBRzGFh4iIjPcuAWTa5eLgM6f1MfAMedDcr2r%2BLo%2FtyvtHyCyyhlb2eaPDvvGtFLOjAY%2FTqvts%2BdQX6gkeBtA3LKE%2FR%2BpPlEfhlj1GJ8QccKdnZj1K%2F9qPg%2Bc0dTeKMEl12SHX3gPCz61v0pTOHWAq765fEHFsSYURQJ2kXeZfm9k%2BobmCMeV8pfO%2BgYMOI34J2FgaBBtqe38R8QcLjfcGWtQGQru&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2KEOLBBXN%2F20241027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241027T043228Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=ddcf7471d1a67edcec608cc70343a7c1e4709ab3194adbb3af2861db6ba2146f"
+        # Expanded training examples with diverse products
         training_examples = [
             {
-                "image_path": "shopping.jpeg",
+                "image_url": shop_image_url,
                 "tags": {
                     "red_scarf_1": {
                         "category_tags": {
@@ -546,70 +586,342 @@ def main():
                                 "confidence": 0.95,
                                 "buy_rate": 0.90,
                                 "click_rate": 0.85
-                            },
-                            "wool": {
-                                "confidence": 0.45,
-                                "buy_rate": 0.40,
-                                "click_rate": 0.35
-                            },
-                            "wool_blend": {
-                                "confidence": 0.40,
-                                "buy_rate": 0.35,
-                                "click_rate": 0.30
+                            }
+                        },
+                        "style_tags": {
+                            "casual": {
+                                "confidence": 0.90,
+                                "buy_rate": 0.85,
+                                "click_rate": 0.88
+                            }
+                        },
+                        "usage_tags": {
+                            "winter": {
+                                "confidence": 0.95,
+                                "buy_rate": 0.92,
+                                "click_rate": 0.89
                             }
                         }
                     }
                 }
             },
-            # Additional example with low wool confidence
+            # Additional examples with different products
             {
-                "image_path": "shopping.jpeg",
+                "image_url": shop_image_url,  # Use same image for testing
                 "tags": {
-                    "scarf_2": {
+                    "blue_dress_1": {
                         "category_tags": {
-                            "scarf": {
-                                "confidence": 0.98,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.90
+                            "dress": {
+                                "confidence": 0.97,
+                                "buy_rate": 0.82,
+                                "click_rate": 0.88
                             }
                         },
                         "attribute_tags": {
-                            "synthetic": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.90,
-                                "click_rate": 0.85
+                            "cotton": {
+                                "confidence": 0.92,
+                                "buy_rate": 0.85,
+                                "click_rate": 0.83
                             },
-                            "wool": {
-                                "confidence": 0.35,
-                                "buy_rate": 0.30,
-                                "click_rate": 0.25
+                            "floral": {
+                                "confidence": 0.96,
+                                "buy_rate": 0.88,
+                                "click_rate": 0.92
+                            }
+                        },
+                        "style_tags": {
+                            "summer": {
+                                "confidence": 0.95,
+                                "buy_rate": 0.87,
+                                "click_rate": 0.90
+                            }
+                        },
+                        "usage_tags": {
+                            "casual": {
+                                "confidence": 0.93,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
                             }
                         }
                     }
                 }
             },
-            # Example explicitly showing high confidence for synthetic materials
+            # Add 8 more variations with different styles and categories
             {
-                "image_path": "shopping.jpeg",
+                "image_url": shop_image_url,
                 "tags": {
-                    "scarf_3": {
+                    "leather_jacket_1": {
                         "category_tags": {
-                            "scarf": {
-                                "confidence": 0.98,
+                            "jacket": {
+                                "confidence": 0.96,
+                                "buy_rate": 0.88,
+                                "click_rate": 0.92
+                            }
+                        },
+                        "attribute_tags": {
+                            "leather": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        },
+                        "style_tags": {
+                            "edgy": {
+                                "confidence": 0.92,
+                                "buy_rate": 0.84,
+                                "click_rate": 0.87
+                            }
+                        },
+                        "usage_tags": {
+                            "evening": {
+                                "confidence": 0.90,
+                                "buy_rate": 0.82,
+                                "click_rate": 0.85
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "image_url": shop_image_url,
+                "tags": {
+                    "silk_blouse_1": {
+                        "category_tags": {
+                            "blouse": {
+                                "confidence": 0.95,
+                                "buy_rate": 0.87,
+                                "click_rate": 0.91
+                            }
+                        },
+                        "attribute_tags": {
+                            "silk": {
+                                "confidence": 0.93,
                                 "buy_rate": 0.85,
+                                "click_rate": 0.88
+                            }
+                        },
+                        "style_tags": {
+                            "elegant": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        },
+                        "usage_tags": {
+                            "work": {
+                                "confidence": 0.92,
+                                "buy_rate": 0.84,
+                                "click_rate": 0.87
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "image_url": shop_image_url,
+                "tags": {
+                    "denim_jeans_1": {
+                        "category_tags": {
+                            "jeans": {
+                                "confidence": 0.97,
+                                "buy_rate": 0.89,
+                                "click_rate": 0.93
+                            }
+                        },
+                        "attribute_tags": {
+                            "denim": {
+                                "confidence": 0.95,
+                                "buy_rate": 0.87,
+                                "click_rate": 0.90
+                            }
+                        },
+                        "style_tags": {
+                            "casual": {
+                                "confidence": 0.96,
+                                "buy_rate": 0.88,
+                                "click_rate": 0.91
+                            }
+                        },
+                        "usage_tags": {
+                            "everyday": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "image_url": shop_image_url,
+                "tags": {
+                    "wool_sweater_1": {
+                        "category_tags": {
+                            "sweater": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        },
+                        "attribute_tags": {
+                            "wool": {
+                                "confidence": 0.92,
+                                "buy_rate": 0.84,
+                                "click_rate": 0.87
+                            }
+                        },
+                        "style_tags": {
+                            "cozy": {
+                                "confidence": 0.93,
+                                "buy_rate": 0.85,
+                                "click_rate": 0.88
+                            }
+                        },
+                        "usage_tags": {
+                            "winter": {
+                                "confidence": 0.95,
+                                "buy_rate": 0.87,
+                                "click_rate": 0.90
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "image_url": shop_image_url,
+                "tags": {
+                    "linen_pants_1": {
+                        "category_tags": {
+                            "pants": {
+                                "confidence": 0.93,
+                                "buy_rate": 0.85,
+                                "click_rate": 0.88
+                            }
+                        },
+                        "attribute_tags": {
+                            "linen": {
+                                "confidence": 0.91,
+                                "buy_rate": 0.83,
+                                "click_rate": 0.86
+                            }
+                        },
+                        "style_tags": {
+                            "summer": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        },
+                        "usage_tags": {
+                            "beach": {
+                                "confidence": 0.92,
+                                "buy_rate": 0.84,
+                                "click_rate": 0.87
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "image_url": shop_image_url,
+                "tags": {
+                    "cotton_tshirt_1": {
+                        "category_tags": {
+                            "tshirt": {
+                                "confidence": 0.96,
+                                "buy_rate": 0.88,
+                                "click_rate": 0.91
+                            }
+                        },
+                        "attribute_tags": {
+                            "cotton": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        },
+                        "style_tags": {
+                            "basic": {
+                                "confidence": 0.95,
+                                "buy_rate": 0.87,
+                                "click_rate": 0.90
+                            }
+                        },
+                        "usage_tags": {
+                            "casual": {
+                                "confidence": 0.93,
+                                "buy_rate": 0.85,
+                                "click_rate": 0.88
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "image_url": shop_image_url,
+                "tags": {
+                    "sequin_dress_1": {
+                        "category_tags": {
+                            "dress": {
+                                "confidence": 0.95,
+                                "buy_rate": 0.87,
                                 "click_rate": 0.90
                             }
                         },
                         "attribute_tags": {
-                            "polyester": {
+                            "sequin": {
+                                "confidence": 0.93,
+                                "buy_rate": 0.85,
+                                "click_rate": 0.88
+                            }
+                        },
+                        "style_tags": {
+                            "party": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        },
+                        "usage_tags": {
+                            "evening": {
+                                "confidence": 0.92,
+                                "buy_rate": 0.84,
+                                "click_rate": 0.87
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "image_url": shop_image_url,
+                "tags": {
+                    "velvet_blazer_1": {
+                        "category_tags": {
+                            "blazer": {
+                                "confidence": 0.94,
+                                "buy_rate": 0.86,
+                                "click_rate": 0.89
+                            }
+                        },
+                        "attribute_tags": {
+                            "velvet": {
+                                "confidence": 0.92,
+                                "buy_rate": 0.84,
+                                "click_rate": 0.87
+                            }
+                        },
+                        "style_tags": {
+                            "luxury": {
+                                "confidence": 0.93,
+                                "buy_rate": 0.85,
+                                "click_rate": 0.88
+                            }
+                        },
+                        "usage_tags": {
+                            "formal": {
                                 "confidence": 0.95,
-                                "buy_rate": 0.90,
-                                "click_rate": 0.85
-                            },
-                            "wool_content": {
-                                "confidence": 0.30,
-                                "buy_rate": 0.25,
-                                "click_rate": 0.20
+                                "buy_rate": 0.87,
+                                "click_rate": 0.90
                             }
                         }
                     }
@@ -617,35 +929,33 @@ def main():
             }
         ]
         
-        # Prepare training data
-        image_paths = [example["image_path"] for example in training_examples]
+        # Prepare and fine-tune
+        image_urls = [example["image_url"] for example in training_examples]
         ground_truth_tags = [example["tags"] for example in training_examples]
         
         print("Preparing training data...")
-        training_data = tagger.prepare_training_data(image_paths, ground_truth_tags)
-        print(f"Number of training examples: {len(training_data)}")
-        print("my training data:", training_data)
-        # Validate and fine-tune
-        if tagger.validate_training_data(training_data):
-            # Increase epochs to better learn the pattern
+        training_data = tagger.prepare_training_data(image_urls, ground_truth_tags)
+        
+        if training_data:
+            print(f"Number of training examples: {len(training_data)}")
             result = tagger.fine_tune(
                 training_data=training_data,
-                epoch_count=5,  # Increased epochs
-                learning_rate=0.01,
-                model_name="product_tagger_v2"  # New version
+                model_name="gpt-4o-2024-08-06"
             )
             
             print("\nFine-tuning result:")
             print(json.dumps(result, indent=2, cls=CustomJSONEncoder))
             
-            # Test if fine-tuning was successful
             if "error" not in result:
-                print("\nTesting fine-tuned model...")
-                test_tags = tagger.generate_tags("shopping2.jpeg")
-                print("\nGenerated tags from fine-tuned model:")
+                print("\nTesting model...")
+                test_tags = tagger.generate_tags(shop_image_url)
+                print("\nGenerated tags:")
+                print(json.dumps(test_tags, indent=2))
+                test_tags = tagger.generate_tags(shop_image_url2)
+                print("\nGenerated tags:")
                 print(json.dumps(test_tags, indent=2))
         else:
-            print("Training data validation failed")
+            print("No valid training data generated")
             
     except Exception as e:
         print(f"\nError in main: {str(e)}")
