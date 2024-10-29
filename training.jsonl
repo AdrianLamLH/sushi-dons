@@ -1,0 +1,355 @@
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "red_scarf_1": {
+            "category_tags": {
+                "scarf": {
+                    "confidence": 0.98,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.90
+                }
+            },
+            "attribute_tags": {
+                "nylon": {
+                    "confidence": 0.75,
+                    "buy_rate": 0.90,
+                    "click_rate": 0.85
+                }
+            },
+            "style_tags": {
+                "casual": {
+                    "confidence": 0.90,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.88
+                }
+            },
+            "usage_tags": {
+                "winter": {
+                    "confidence": 0.95,
+                    "buy_rate": 0.92,
+                    "click_rate": 0.89
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "blue_dress_1": {
+            "category_tags": {
+                "dress": {
+                    "confidence": 0.97,
+                    "buy_rate": 0.82,
+                    "click_rate": 0.88
+                }
+            },
+            "attribute_tags": {
+                "cotton": {
+                    "confidence": 0.72,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.83
+                },
+                "floral": {
+                    "confidence": 0.96,
+                    "buy_rate": 0.88,
+                    "click_rate": 0.92
+                }
+            },
+            "style_tags": {
+                "summer": {
+                    "confidence": 0.95,
+                    "buy_rate": 0.87,
+                    "click_rate": 0.90
+                }
+            },
+            "usage_tags": {
+                "casual": {
+                    "confidence": 0.93,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "leather_jacket_1": {
+            "category_tags": {
+                "jacket": {
+                    "confidence": 0.96,
+                    "buy_rate": 0.88,
+                    "click_rate": 0.92
+                }
+            },
+            "attribute_tags": {
+                "leather": {
+                    "confidence": 0.74,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            },
+            "style_tags": {
+                "edgy": {
+                    "confidence": 0.92,
+                    "buy_rate": 0.84,
+                    "click_rate": 0.87
+                }
+            },
+            "usage_tags": {
+                "evening": {
+                    "confidence": 0.90,
+                    "buy_rate": 0.82,
+                    "click_rate": 0.85
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "silk_blouse_1": {
+            "category_tags": {
+                "blouse": {
+                    "confidence": 0.95,
+                    "buy_rate": 0.87,
+                    "click_rate": 0.91
+                }
+            },
+            "attribute_tags": {
+                "silk": {
+                    "confidence": 0.73,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.88
+                }
+            },
+            "style_tags": {
+                "elegant": {
+                    "confidence": 0.94,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            },
+            "usage_tags": {
+                "work": {
+                    "confidence": 0.92,
+                    "buy_rate": 0.84,
+                    "click_rate": 0.87
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "denim_jeans_1": {
+            "category_tags": {
+                "jeans": {
+                    "confidence": 0.97,
+                    "buy_rate": 0.89,
+                    "click_rate": 0.93
+                }
+            },
+            "attribute_tags": {
+                "denim": {
+                    "confidence": 0.75,
+                    "buy_rate": 0.87,
+                    "click_rate": 0.90
+                }
+            },
+            "style_tags": {
+                "casual": {
+                    "confidence": 0.96,
+                    "buy_rate": 0.88,
+                    "click_rate": 0.91
+                }
+            },
+            "usage_tags": {
+                "everyday": {
+                    "confidence": 0.94,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "wool_sweater_1": {
+            "category_tags": {
+                "sweater": {
+                    "confidence": 0.94,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            },
+            "attribute_tags": {
+                "wool": {
+                    "confidence": 0.72,
+                    "buy_rate": 0.84,
+                    "click_rate": 0.87
+                }
+            },
+            "style_tags": {
+                "cozy": {
+                    "confidence": 0.93,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.88
+                }
+            },
+            "usage_tags": {
+                "winter": {
+                    "confidence": 0.95,
+                    "buy_rate": 0.87,
+                    "click_rate": 0.90
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "linen_pants_1": {
+            "category_tags": {
+                "pants": {
+                    "confidence": 0.93,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.88
+                }
+            },
+            "attribute_tags": {
+                "linen": {
+                    "confidence": 0.71,
+                    "buy_rate": 0.83,
+                    "click_rate": 0.86
+                }
+            },
+            "style_tags": {
+                "summer": {
+                    "confidence": 0.94,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            },
+            "usage_tags": {
+                "beach": {
+                    "confidence": 0.92,
+                    "buy_rate": 0.84,
+                    "click_rate": 0.87
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "cotton_tshirt_1": {
+            "category_tags": {
+                "tshirt": {
+                    "confidence": 0.96,
+                    "buy_rate": 0.88,
+                    "click_rate": 0.91
+                }
+            },
+            "attribute_tags": {
+                "cotton": {
+                    "confidence": 0.74,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            },
+            "style_tags": {
+                "basic": {
+                    "confidence": 0.95,
+                    "buy_rate": 0.87,
+                    "click_rate": 0.90
+                }
+            },
+            "usage_tags": {
+                "casual": {
+                    "confidence": 0.93,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.88
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "sequin_dress_1": {
+            "category_tags": {
+                "dress": {
+                    "confidence": 0.95,
+                    "buy_rate": 0.87,
+                    "click_rate": 0.90
+                }
+            },
+            "attribute_tags": {
+                "sequin": {
+                    "confidence": 0.73,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.88
+                }
+            },
+            "style_tags": {
+                "party": {
+                    "confidence": 0.94,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            },
+            "usage_tags": {
+                "evening": {
+                    "confidence": 0.92,
+                    "buy_rate": 0.84,
+                    "click_rate": 0.87
+                }
+            }
+        }
+    }
+},
+{
+    "image_url": "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf",
+    "tags": {
+        "velvet_blazer_1": {
+            "category_tags": {
+                "blazer": {
+                    "confidence": 0.94,
+                    "buy_rate": 0.86,
+                    "click_rate": 0.89
+                }
+            },
+            "attribute_tags": {
+                "velvet": {
+                    "confidence": 0.72,
+                    "buy_rate": 0.84,
+                    "click_rate": 0.87
+                }
+            },
+            "style_tags": {
+                "luxury": {
+                    "confidence": 0.93,
+                    "buy_rate": 0.85,
+                    "click_rate": 0.88
+                }
+            },
+            "usage_tags": {
+                "formal": {
+                    "confidence": 0.95,
+                    "buy_rate": 0.87,
+                    "click_rate": 0.90
+                }
+            }
+        }
+    }
+}
