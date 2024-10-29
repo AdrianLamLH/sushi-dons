@@ -161,4 +161,4 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-./ga4_api/config.json
+/ga4_api/config.json
