@@ -33,155 +33,89 @@ class OpenAIProductTagger:
         self.ft_model = None  # Will store the fine-tuned model name
         self.performance_history = []
         
-        # # Add the system prompt
-        # self.system_prompt = """You are an AI fashion product tagger. Analyze products and generate tags."""
-        
-        # # Add the user prompt template
-        # self.user_prompt_template = """Analyze this fashion product and generate tags in the following format:
-        # {
-        #     "product_id": {
-        #         "category_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}},
-        #         "attribute_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}},
-        #         "style_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}},
-        #         "usage_tags": {"tag_name": {"confidence": 0-1, "buy_rate": 0-1, "click_rate": 0-1}}
-        #     }
-        # }"""
+        # Define the JSON structure template
         self.json_template = '''
     {
         "product_id": {
             "category_tags": {
                 "tag_name": {
-                    "confidence": 0-1,
+                    "seo_score": 0-1,
                     "buy_rate": 0-1,
                     "click_rate": 0-1
                 }
             },
             "attribute_tags": {
                 "tag_name": {
-                    "confidence": 0-1,
+                    "seo_score": 0-1,
                     "buy_rate": 0-1,
                     "click_rate": 0-1
                 }
             },
             "style_tags": {
                 "tag_name": {
-                    "confidence": 0-1,
+                    "seo_score": 0-1,
                     "buy_rate": 0-1,
                     "click_rate": 0-1
                 }
             },
             "usage_tags": {
                 "tag_name": {
-                    "confidence": 0-1,
+                    "seo_score": 0-1,
                     "buy_rate": 0-1,
                     "click_rate": 0-1
                 }
             }
         }
     }'''
-
-        # Define the good example separately
-        self.good_example = '''
-{
-    "red_scarf_1": {
-        "category_tags": {
-            "scarf": {
-                "confidence": 0.98,
-                "buy_rate": 0.85,
-                "click_rate": 0.90
+        self.training_examples = {
+            "high_performing_tags": {
+                "category": {
+                    "designer_wear": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+                    "dior_original": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+                    "modern_fashion": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95}
+                },
+                "attribute": {
+                    "quality_construction": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92},
+                    "brand_detail": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92},
+                    "contrast_design": {"seo_score": 0.94, "buy_rate": 0.89, "click_rate": 0.92}
+                },
+                "style": {
+                    "current_trend": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91},
+                    "signature_look": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91},
+                    "clean_design": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90}
+                }
             },
-            "winter_accessory": {
-                "confidence": 0.95,
-                "buy_rate": 0.80,
-                "click_rate": 0.85
-            }
-        },
-        "attribute_tags": {
-            "crimson": {
-                "confidence": 0.95,
-                "buy_rate": 0.75,
-                "click_rate": 0.80
-            },
-            "wool_blend": {
-                "confidence": 0.90,
-                "buy_rate": 0.70,
-                "click_rate": 0.75
-            },
-            "houndstooth": {
-                "confidence": 0.98,
-                "buy_rate": 0.85,
-                "click_rate": 0.90
-            }
-        },
-        "style_tags": {
-            "preppy": {
-                "confidence": 0.90,
-                "buy_rate": 0.80,
-                "click_rate": 0.85
-            },
-            "classic": {
-                "confidence": 0.95,
-                "buy_rate": 0.85,
-                "click_rate": 0.90
-            }
-        },
-        "usage_tags": {
-            "winter": {
-                "confidence": 0.98,
-                "buy_rate": 0.90,
-                "click_rate": 0.95
-            },
-            "office": {
-                "confidence": 0.85,
-                "buy_rate": 0.75,
-                "click_rate": 0.80
+            "low_performing_tags": {
+                "attribute": {
+                    "premium_cotton": {"seo_score": 0.28, "buy_rate": 0.85, "click_rate": 0.88},
+                    "designer_fabric": {"seo_score": 0.27, "buy_rate": 0.84, "click_rate": 0.87},
+                    "soft_fabric": {"seo_score": 0.27, "buy_rate": 0.84, "click_rate": 0.87}
+                },
+                "color": {
+                    "bright_white": {"seo_score": 0.23, "buy_rate": 0.81, "click_rate": 0.84},
+                    "white_base": {"seo_score": 0.24, "buy_rate": 0.81, "click_rate": 0.84},
+                    "snow_white": {"seo_score": 0.24, "buy_rate": 0.81, "click_rate": 0.84}
+                }
             }
         }
-    }
-}'''
 
-        # Define the bad example separately
-        self.bad_example = '''
-{
-    "scarf_thing": {
-        "category_tags": {
-            "neck_item": {
-                "confidence": 0.50,
-                "buy_rate": 0.30,
-                "click_rate": 0.20
-            },
-            "wrappy_scarf": {
-                "confidence": 0.40,
-                "buy_rate": 0.25,
-                "click_rate": 0.15
-            }
-        },
-        "attribute_tags": {
-            "reddish": {
-                "confidence": 0.60,
-                "buy_rate": 0.20,
-                "click_rate": 0.30
-            },
-            "probably_wool": {
-                "confidence": 0.30,
-                "buy_rate": 0.15,
-                "click_rate": 0.25
-            }
-        },
-        "style_tags": {
-            "very_nice": {
-                "confidence": 0.20,
-                "buy_rate": 0.10,
-                "click_rate": 0.15
-            },
-            "fashionable": {
-                "confidence": 0.25,
-                "buy_rate": 0.20,
-                "click_rate": 0.10
-            }
+        self.style_categories = {
+            "classic": ["preppy", "traditional", "collegiate"],
+            "modern": ["streetwear", "contemporary", "urban"],
+            "alternative": ["gothic", "punk", "edgy"],
+            "aesthetic": ["dark academia", "cottagecore", "y2k"],
+            "cultural": ["korean fashion", "parisian chic"],
+            "luxe": ["luxury", "designer inspired"],
+            "casual": ["smart casual", "weekend wear"],
+            "trendy": ["instagram style", "tiktok fashion"]
         }
-    }
-}'''
+
+        self.bad_combinations = [
+            "total opposites without connection (punk princess)",
+            "contradictory terms (grunge formal)",
+            "forced combinations (cottagecore streetwear)",
+            "inconsistent aesthetics (y2k victorian)"
+        ]
 
         # Construct the prompt using regular string concatenation
         self.system_prompt = (
@@ -192,41 +126,51 @@ class OpenAIProductTagger:
             "- Category: Product type and subcategories\n"
             "- Attributes: Colors, materials, patterns\n"
             "- Style: Choose from style categories below\n\n"
+            
             "Focus on the style tagging:\n"
             "STYLE TAGGING INSTRUCTIONS:\n"
             "1. Identify primary style category (2-3 tags)\n"
             "2. Add complementary styles (2-3 tags from different categories)\n"
             "3. Include emerging/trend potential (1-2 tags)\n\n"
+            
             "CROSS-STYLE GUIDELINES:\n"
             "- Consider how the item could be styled differently\n"
             "- Look for versatile styling possibilities\n"
             "- Think about subculture appeal\n"
             "- Include both traditional and unexpected pairings\n"
             "- Consider social media styling trends\n\n"
-            "Style Categories (choose most relevant and try to make as DIVERSE but still relevant as possible):\n"
-            "- Classic: (preppy, traditional, collegiate, etc.)\n"
-            "- Modern: (streetwear, contemporary, urban, etc.)\n"
-            "- Alternative: (gothic, punk, edgy, etc.)\n"
-            "- Aesthetic: (dark academia, cottagecore, y2k, etc.)\n"
-            "- Cultural: (korean fashion, parisian chic, etc.)\n"
-            "- Luxe: (luxury, designer inspired, etc.)\n"
-            "- Casual: (smart casual, weekend wear, etc.)\n"
-            "- Trendy: (instagram style, tiktok fashion, etc.)\n\n"
+            
+            f"Style Categories:\n{self.style_categories}\n\n"
+            
+            f"BAD EXAMPLES OF STYLE MIXING:\n{self.bad_combinations}\n\n"
+            
+            "PERFORMANCE METRICS FROM TRAINING DATA:\n"
+            "High Performing Tags (SEO Score > 0.90):\n"
+            f"{self.training_examples['high_performing_tags']}\n\n"
+            "Low Performing Tags (SEO Score < 0.30):\n"
+            f"{self.training_examples['low_performing_tags']}\n\n"
+            
             "Requirements:\n"
             "- All tags lowercase\n"
             "- Max 3 words per tag\n"
             "- Only include visible features\n"
-            "- Provide confidence score (0-1)\n"
-            "- Buy rate (0-1) and click rate (0-1)\n"
+            "- Provide seo_score score (0-1)\n"
+            "- Buy rate (0-1) and click rate (0-1), default value if nothing is passed in is 0\n"
             "- No subjective terms\n"
             "- No vague descriptions\n\n"
-            f"GOOD EXAMPLE:\n{self.good_example}\n\n"
-            f"BAD EXAMPLE:\n{self.bad_example}\n\n"
+            
+            "SEO SCORING GUIDELINES:\n"
+            "- Search seo_score: How likely are customers to use this term AND MAKE A PURCHASE?\n"
+            "- FOR ALL THREE METRICS:\n"
+            "  0 = WORST (NO CUSTOMERS BUY USING THIS TERM)\n"
+            "  1 = BEST (ALL CUSTOMERS BUY THE PRODUCT USING THIS TERM)\n"
+            "- Learn from training examples: category/brand tags perform best, fabric/color specifics perform worse\n\n"
+            
             "When tagging a product, analyze it and output the structured JSON with all required scores and metrics. "
             "Ensure every tag is searchable and market-relevant."
         )
         self.user_prompt_template = (
-            "Analyze this fashion product and generate tags in the following format:\n"
+            "Analyze this fashion product and generate NEW tags in the following format based on the training data:\n"
             f"{self.json_template}"
         )
 
@@ -413,8 +357,8 @@ class OpenAIProductTagger:
                     purpose="fine-tune"
                 )
             
-            # Clean up
-            os.remove(temp_file)
+            # # Clean up
+            # os.remove(temp_file)
             
             return response.id
             
@@ -432,7 +376,7 @@ class OpenAIProductTagger:
 
             # Use GPT-4V for initial analysis
             response = openai.chat.completions.create(
-                model=self.ft_model,
+                model=self.vision_model,
                 messages=[
                     {
                         "role": "system",
@@ -542,7 +486,7 @@ class OpenAIProductTagger:
                         
                     # Check each tag's structure
                     for tag_name, tag_data in product_data[category].items():
-                        required_fields = ['confidence', 'buy_rate', 'click_rate']
+                        required_fields = ['seo_score', 'buy_rate', 'click_rate']
                         
                         # Check if all required fields exist
                         if not all(field in tag_data for field in required_fields):
@@ -566,396 +510,357 @@ def main():
     try:
         # Initialize tagger
         tagger = OpenAIProductTagger(os.environ.get("OPENAI_API_KEY"))
-        shop_image_url = "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIC4x92d9EDpce7qbnGFxrTc7FcYa%2BfgPalEPRkSwFX%2FTAiAIT2dhexJrVldf54y8K8AQOHuR0hk%2FtKdsqJYTz%2F58WyrHAwgmEAAaDDg4NjQzNjk1NjUzMiIMXc6yL7UsvRscBcR2KqQD55ZN7BfFUsAE%2FydKKR49I3yw8sa9t6iZPYfzY7pWFGdt6FiOZgP%2FtI41uIIOuWrGRAs3u7kKSZ57Ss1h7VcFrey8l2BmHMtC7kDWvrYhNc%2FZ8vXZy5CUHEIhxEBVL9Eq7YRbI1FetRGCgPy2S%2Fbbqr%2FVfDLS%2B3dQIAODNzh3iFylVHkwgmSWaFGXvj2yDuwBLhoq1KVNRMt%2Fs2Y8WwV3GZC6Q0pimPoGaDwV%2BBprG0E1wMmDADWeRxxXckyzKfHJe46MrS27Y0vyhlW5eQDDWxGQNUjK9VvogntY6phzztCqky0W2DnGZjGHVTJjKLts%2BtffihwWc7AlWWocbnZMjW7RS%2FWH8K9N8wvSGL2qBHrYjCauruODNhHF8B5bPbTqwHj8apbZe83iPKWw6bWbMVlr6ESTN2r0%2B4bTV82Et7Q%2FXNQd3IUWfMxWtWzTm9%2BS20CBxbwQg5%2F%2Bju7fMvvbgh8Owg%2BHWRKkqD8RdCGg8GQh1H2WyV1tLYGaR1eXuIrFF6xnPj9HCHTxdhJfER9xGudHtyELcM5CdrCMmgWI14sZWlUmMLHn9rgGOuUCtAskpCOPoU7JTTktA8NaiJkU2FDpLEO5TklIcT7%2FGYUvYnszWW%2FyDx%2FLezwAUwmdX7SWNctOLFLlEri6coFhmJGTG1ZmXo3vcHFtx26kD0d5vtqdNupYncKeo5ZB%2F%2BEH%2F9ecc4lswOnGq7LAjr8nr5FfxiF%2BiSeQdI1zScSamMVzU6fhQ6HpckT%2FYe9wDZF3mPPys9bvEl8jpZ1FRViqp%2F%2FDRPG2MNe5e67CuZsQHz481%2BLWGA%2B28%2BTNeWGqtbM%2BBRzGFh4iIjPcuAWTa5eLgM6f1MfAMedDcr2r%2BLo%2FtyvtHyCyyhlb2eaPDvvGtFLOjAY%2FTqvts%2BdQX6gkeBtA3LKE%2FR%2BpPlEfhlj1GJ8QccKdnZj1K%2F9qPg%2Bc0dTeKMEl12SHX3gPCz61v0pTOHWAq765fEHFsSYURQJ2kXeZfm9k%2BobmCMeV8pfO%2BgYMOI34J2FgaBBtqe38R8QcLjfcGWtQGQru&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2KEOLBBXN%2F20241027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241027T043049Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=dddfa6a8028d3b6ebd0fea14c01cec86bcbd9d900cff64ad48e0eec2ec69a8bc"
-        shop_image_url2 = "https://test-sushi-122.s3.us-east-1.amazonaws.com/BM17064.473BLK_BLACK-STORM-STOPPER-BOMBER-JACKET.jpeg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEK3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJGMEQCIC4x92d9EDpce7qbnGFxrTc7FcYa%2BfgPalEPRkSwFX%2FTAiAIT2dhexJrVldf54y8K8AQOHuR0hk%2FtKdsqJYTz%2F58WyrHAwgmEAAaDDg4NjQzNjk1NjUzMiIMXc6yL7UsvRscBcR2KqQD55ZN7BfFUsAE%2FydKKR49I3yw8sa9t6iZPYfzY7pWFGdt6FiOZgP%2FtI41uIIOuWrGRAs3u7kKSZ57Ss1h7VcFrey8l2BmHMtC7kDWvrYhNc%2FZ8vXZy5CUHEIhxEBVL9Eq7YRbI1FetRGCgPy2S%2Fbbqr%2FVfDLS%2B3dQIAODNzh3iFylVHkwgmSWaFGXvj2yDuwBLhoq1KVNRMt%2Fs2Y8WwV3GZC6Q0pimPoGaDwV%2BBprG0E1wMmDADWeRxxXckyzKfHJe46MrS27Y0vyhlW5eQDDWxGQNUjK9VvogntY6phzztCqky0W2DnGZjGHVTJjKLts%2BtffihwWc7AlWWocbnZMjW7RS%2FWH8K9N8wvSGL2qBHrYjCauruODNhHF8B5bPbTqwHj8apbZe83iPKWw6bWbMVlr6ESTN2r0%2B4bTV82Et7Q%2FXNQd3IUWfMxWtWzTm9%2BS20CBxbwQg5%2F%2Bju7fMvvbgh8Owg%2BHWRKkqD8RdCGg8GQh1H2WyV1tLYGaR1eXuIrFF6xnPj9HCHTxdhJfER9xGudHtyELcM5CdrCMmgWI14sZWlUmMLHn9rgGOuUCtAskpCOPoU7JTTktA8NaiJkU2FDpLEO5TklIcT7%2FGYUvYnszWW%2FyDx%2FLezwAUwmdX7SWNctOLFLlEri6coFhmJGTG1ZmXo3vcHFtx26kD0d5vtqdNupYncKeo5ZB%2F%2BEH%2F9ecc4lswOnGq7LAjr8nr5FfxiF%2BiSeQdI1zScSamMVzU6fhQ6HpckT%2FYe9wDZF3mPPys9bvEl8jpZ1FRViqp%2F%2FDRPG2MNe5e67CuZsQHz481%2BLWGA%2B28%2BTNeWGqtbM%2BBRzGFh4iIjPcuAWTa5eLgM6f1MfAMedDcr2r%2BLo%2FtyvtHyCyyhlb2eaPDvvGtFLOjAY%2FTqvts%2BdQX6gkeBtA3LKE%2FR%2BpPlEfhlj1GJ8QccKdnZj1K%2F9qPg%2Bc0dTeKMEl12SHX3gPCz61v0pTOHWAq765fEHFsSYURQJ2kXeZfm9k%2BobmCMeV8pfO%2BgYMOI34J2FgaBBtqe38R8QcLjfcGWtQGQru&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2KEOLBBXN%2F20241027%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241027T043228Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=ddcf7471d1a67edcec608cc70343a7c1e4709ab3194adbb3af2861db6ba2146f"
+        shop_image_url = "https://test-sushi-122.s3.us-east-1.amazonaws.com/Spier%26Mackay-JSBH2109-Gray%20-%20Wool%20Scarf%20%283%29.jpg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015242Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=26aa826ff89cd79bf516c9bc5bcad79e141d79c41622dfa5d7435b94244d9baf"
+        shop_image_url2 = "https://test-sushi-122.s3.us-east-1.amazonaws.com/BM17064.473BLK_BLACK-STORM-STOPPER-BOMBER-JACKET.jpeg?response-content-disposition=inline&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Security-Token=IQoJb3JpZ2luX2VjENr%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLWVhc3QtMSJHMEUCIQDJB3WO1uu3Gew3tUnQVWYs6isY8BRQ3o92wFpoW8NZEwIgdJ7LEaUEkwiVzQ5sU%2BV0HqEvBcOU9Z204WqJkk1mKAQqxwMIUxAAGgw4ODY0MzY5NTY1MzIiDOtYbCT%2BPbB8WFyztCqkA2utFLGPaHWhySRwJ1LtUFxzez1BxrgVgAjc7Vf6mq3l2T1EwGU8Ied2CEaPqhHemWPH5Bh2n1i7F3sF9V7f6JLCX%2FW2U9bPBJrEO5sZSD9rPskwV9b98UHil4Wdqb7rk2dwQv%2F6T1O2Lg%2BhvSLM7prWptNCkS%2F3A02%2Blf2w6MfT7WURp%2FcV7i3wcFjfD9HnGNPzbPB6ccOfCDBVxrmLOh%2BaWFZlUOiWs8bxUS4w1r9AYb6b%2FeQZMj9kSRS5qX%2BoenCU4kAkWZt8vrpB%2B0e3jy%2BhxH1A6SE3Iz6lJwJ86Uog7M9StN6BBrB%2Bq9hkzYM%2F2M5pkzGv0EfLRGdc85QaNiy3c9r2B3N0ZcEsqD6Vv108%2BegxOajzIbr4dqaO%2B%2B9%2BD0gCQq4sAJESSDH8GOiUNUzXVCkeVFmWYNHDg9jX8T%2FumNEhsU0%2FW4LQR5ndSnN6KTvyWhTS%2F41JxWtM2CuHVeUPi0%2BD1N%2BSwbqQ58Ck7o%2BlCmhnLXRM8oDvLJBsipgG3ky6TlXRph4NPxb5pKq6HzOYnug6JWyU0isTWfd5EA00h1TIDTCN8YC5BjrkAtOGUA%2BvUtkwO%2BoPaoMgiUtnmMYhZcHwBJSnCTAi1l1%2FQGCE0SKUlzNanejLvC%2B%2FmhIhwjmmK6yqF1bek%2BrIgnhcySBD79UZO21sQj%2FBDiMpPNvVUt0qzpPkHEvQeR0TJnvomdoEx20nEwMKitVDAtQhXaPA2R9%2FiZaaaVHRx%2FOYkPThsggB3PpROxKg8aPYPZNhcMlIo%2BEen1xtCjR5zWKuXXdg7yZKEmYx2wk0NYj9cUbwIEdNwAVO0Q8PmNXaqW%2BQG965zTwAjMSLGyUJbWsK3odLUbVTaEE9%2Bdtqqxtkgk7cKRiDCvUZC3ZGa2a%2BVO34OqEcaA5Sp2M75uialQlMupyR8WXlMj%2Bail%2BG%2Foc6qgKAes6KOQPNFx9LifbvbcPHJY7fpxaw6k5TMWK4FVRjpmabntjTHXle3D8a4hhC4s3r8ayNLpzl27T%2BXodcFANNJzZOS3VI7xaKgGeF3DWCpSYp&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=ASIA44Y6CRF2DFCG6KYA%2F20241029%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20241029T015304Z&X-Amz-Expires=43200&X-Amz-SignedHeaders=host&X-Amz-Signature=6226ba0036c41f4e3afaa9e47c1270aa59579564315d9e909d091f889877c397"
         # Expanded training examples with diverse products
-        training_examples = [
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "red_scarf_1": {
-                        "category_tags": {
-                            "scarf": {
-                                "confidence": 0.98,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.90
-                            }
-                        },
-                        "attribute_tags": {
-                            "nylon": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.90,
-                                "click_rate": 0.85
-                            }
-                        },
-                        "style_tags": {
-                            "casual": {
-                                "confidence": 0.90,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.88
-                            }
-                        },
-                        "usage_tags": {
-                            "winter": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.92,
-                                "click_rate": 0.89
-                            }
-                        }
-                    }
-                }
-            },
-            # Additional examples with different products
-            {
-                "image_url": shop_image_url,  # Use same image for testing
-                "tags": {
-                    "blue_dress_1": {
-                        "category_tags": {
-                            "dress": {
-                                "confidence": 0.97,
-                                "buy_rate": 0.82,
-                                "click_rate": 0.88
-                            }
-                        },
-                        "attribute_tags": {
-                            "cotton": {
-                                "confidence": 0.92,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.83
-                            },
-                            "floral": {
-                                "confidence": 0.96,
-                                "buy_rate": 0.88,
-                                "click_rate": 0.92
-                            }
-                        },
-                        "style_tags": {
-                            "summer": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.87,
-                                "click_rate": 0.90
-                            }
-                        },
-                        "usage_tags": {
-                            "casual": {
-                                "confidence": 0.93,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        }
-                    }
-                }
-            },
-            # Add 8 more variations with different styles and categories
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "leather_jacket_1": {
-                        "category_tags": {
-                            "jacket": {
-                                "confidence": 0.96,
-                                "buy_rate": 0.88,
-                                "click_rate": 0.92
-                            }
-                        },
-                        "attribute_tags": {
-                            "leather": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        },
-                        "style_tags": {
-                            "edgy": {
-                                "confidence": 0.92,
-                                "buy_rate": 0.84,
-                                "click_rate": 0.87
-                            }
-                        },
-                        "usage_tags": {
-                            "evening": {
-                                "confidence": 0.90,
-                                "buy_rate": 0.82,
-                                "click_rate": 0.85
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "silk_blouse_1": {
-                        "category_tags": {
-                            "blouse": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.87,
-                                "click_rate": 0.91
-                            }
-                        },
-                        "attribute_tags": {
-                            "silk": {
-                                "confidence": 0.93,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.88
-                            }
-                        },
-                        "style_tags": {
-                            "elegant": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        },
-                        "usage_tags": {
-                            "work": {
-                                "confidence": 0.92,
-                                "buy_rate": 0.84,
-                                "click_rate": 0.87
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "denim_jeans_1": {
-                        "category_tags": {
-                            "jeans": {
-                                "confidence": 0.97,
-                                "buy_rate": 0.89,
-                                "click_rate": 0.93
-                            }
-                        },
-                        "attribute_tags": {
-                            "denim": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.87,
-                                "click_rate": 0.90
-                            }
-                        },
-                        "style_tags": {
-                            "casual": {
-                                "confidence": 0.96,
-                                "buy_rate": 0.88,
-                                "click_rate": 0.91
-                            }
-                        },
-                        "usage_tags": {
-                            "everyday": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "wool_sweater_1": {
-                        "category_tags": {
-                            "sweater": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        },
-                        "attribute_tags": {
-                            "wool": {
-                                "confidence": 0.92,
-                                "buy_rate": 0.84,
-                                "click_rate": 0.87
-                            }
-                        },
-                        "style_tags": {
-                            "cozy": {
-                                "confidence": 0.93,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.88
-                            }
-                        },
-                        "usage_tags": {
-                            "winter": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.87,
-                                "click_rate": 0.90
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "linen_pants_1": {
-                        "category_tags": {
-                            "pants": {
-                                "confidence": 0.93,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.88
-                            }
-                        },
-                        "attribute_tags": {
-                            "linen": {
-                                "confidence": 0.91,
-                                "buy_rate": 0.83,
-                                "click_rate": 0.86
-                            }
-                        },
-                        "style_tags": {
-                            "summer": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        },
-                        "usage_tags": {
-                            "beach": {
-                                "confidence": 0.92,
-                                "buy_rate": 0.84,
-                                "click_rate": 0.87
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "cotton_tshirt_1": {
-                        "category_tags": {
-                            "tshirt": {
-                                "confidence": 0.96,
-                                "buy_rate": 0.88,
-                                "click_rate": 0.91
-                            }
-                        },
-                        "attribute_tags": {
-                            "cotton": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        },
-                        "style_tags": {
-                            "basic": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.87,
-                                "click_rate": 0.90
-                            }
-                        },
-                        "usage_tags": {
-                            "casual": {
-                                "confidence": 0.93,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.88
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "sequin_dress_1": {
-                        "category_tags": {
-                            "dress": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.87,
-                                "click_rate": 0.90
-                            }
-                        },
-                        "attribute_tags": {
-                            "sequin": {
-                                "confidence": 0.93,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.88
-                            }
-                        },
-                        "style_tags": {
-                            "party": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        },
-                        "usage_tags": {
-                            "evening": {
-                                "confidence": 0.92,
-                                "buy_rate": 0.84,
-                                "click_rate": 0.87
-                            }
-                        }
-                    }
-                }
-            },
-            {
-                "image_url": shop_image_url,
-                "tags": {
-                    "velvet_blazer_1": {
-                        "category_tags": {
-                            "blazer": {
-                                "confidence": 0.94,
-                                "buy_rate": 0.86,
-                                "click_rate": 0.89
-                            }
-                        },
-                        "attribute_tags": {
-                            "velvet": {
-                                "confidence": 0.92,
-                                "buy_rate": 0.84,
-                                "click_rate": 0.87
-                            }
-                        },
-                        "style_tags": {
-                            "luxury": {
-                                "confidence": 0.93,
-                                "buy_rate": 0.85,
-                                "click_rate": 0.88
-                            }
-                        },
-                        "usage_tags": {
-                            "formal": {
-                                "confidence": 0.95,
-                                "buy_rate": 0.87,
-                                "click_rate": 0.90
-                            }
-                        }
-                    }
-                }
-            }
-        ]
+#         training_examples = [
+#     # Variation 1 - Emphasis on Luxury
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "luxury_casual": {
+#                 "category_tags": {
+#                     "luxury_wear": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "designer_casual": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "premium_tshirt": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "attribute_tags": {
+#                     "premium_cotton": {"seo_score": 0.28, "buy_rate": 0.85, "click_rate": 0.88},
+#                     "pima_blend": {"seo_score": 0.25, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "contrast_trim": {"seo_score": 0.94, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "style_tags": {
+#                     "high_end": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "sophisticated": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "contemporary": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89}
+#                 },
+#                 "brand_tags": {
+#                     "dior": {"seo_score": 0.99, "buy_rate": 0.93, "click_rate": 0.96},
+#                     "paris_fashion": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94}
+#                 },
+#                 "color_tags": {
+#                     "cream": {"seo_score": 0.96, "buy_rate": 0.89, "click_rate": 0.92},
+#                     "black_accent": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 2 - Emphasis on Sport Luxury
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "sport_luxury": {
+#                 "category_tags": {
+#                     "athleisure": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "sport_casual": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93},
+#                     "premium_active": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "attribute_tags": {
+#                     "performance_blend": {"seo_score": 0.27, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "moisture_wicking": {"seo_score": 0.24, "buy_rate": 0.83, "click_rate": 0.86},
+#                     "athletic_cut": {"seo_score": 0.93, "buy_rate": 0.88, "click_rate": 0.91}
+#                 },
+#                 "style_tags": {
+#                     "sport_luxe": {"seo_score": 0.94, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "active_lifestyle": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89},
+#                     "premium_sport": {"seo_score": 0.91, "buy_rate": 0.85, "click_rate": 0.88}
+#                 },
+#                 "brand_tags": {
+#                     "dior_sport": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "luxury_athletic": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "color_tags": {
+#                     "off_white": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "contrast_black": {"seo_score": 0.94, "buy_rate": 0.87, "click_rate": 0.90}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 3 - Emphasis on Streetwear
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "street_luxury": {
+#                 "category_tags": {
+#                     "streetwear": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "urban_luxury": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "designer_street": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "attribute_tags": {
+#                     "street_cotton": {"seo_score": 0.29, "buy_rate": 0.85, "click_rate": 0.88},
+#                     "premium_jersey": {"seo_score": 0.26, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "logo_print": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "style_tags": {
+#                     "urban_style": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "street_fashion": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "hype_wear": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89}
+#                 },
+#                 "brand_tags": {
+#                     "dior_street": {"seo_score": 0.99, "buy_rate": 0.93, "click_rate": 0.96},
+#                     "luxury_street": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94}
+#                 },
+#                 "color_tags": {
+#                     "vintage_white": {"seo_score": 0.96, "buy_rate": 0.89, "click_rate": 0.92},
+#                     "noir_trim": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 4 - Emphasis on Classic Style
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "classic_luxury": {
+#                 "category_tags": {
+#                     "classic_wear": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "timeless_design": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93},
+#                     "heritage_style": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "attribute_tags": {
+#                     "classic_cotton": {"seo_score": 0.28, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "premium_fabric": {"seo_score": 0.25, "buy_rate": 0.83, "click_rate": 0.86},
+#                     "classic_fit": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91}
+#                 },
+#                 "style_tags": {
+#                     "timeless": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "elegant": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89},
+#                     "refined": {"seo_score": 0.91, "buy_rate": 0.85, "click_rate": 0.88}
+#                 },
+#                 "brand_tags": {
+#                     "dior_classic": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "heritage_luxury": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "color_tags": {
+#                     "classic_white": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "traditional_trim": {"seo_score": 0.94, "buy_rate": 0.87, "click_rate": 0.90}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 5 - Emphasis on Modern Style
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "modern_luxury": {
+#                 "category_tags": {
+#                     "modern_wear": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "contemporary_design": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "current_style": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "attribute_tags": {
+#                     "modern_blend": {"seo_score": 0.27, "buy_rate": 0.85, "click_rate": 0.88},
+#                     "tech_fabric": {"seo_score": 0.24, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "modern_cut": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "style_tags": {
+#                     "contemporary": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "minimalist": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "sleek": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89}
+#                 },
+#                 "brand_tags": {
+#                     "modern_dior": {"seo_score": 0.99, "buy_rate": 0.93, "click_rate": 0.96},
+#                     "contemporary_luxury": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94}
+#                 },
+#                 "color_tags": {
+#                     "pure_white": {"seo_score": 0.96, "buy_rate": 0.89, "click_rate": 0.92},
+#                     "modern_contrast": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 6 - Emphasis on Premium Casual
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "premium_casual": {
+#                 "category_tags": {
+#                     "premium_wear": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "elevated_casual": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93},
+#                     "luxury_basics": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "attribute_tags": {
+#                     "premium_blend": {"seo_score": 0.28, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "luxury_cotton": {"seo_score": 0.25, "buy_rate": 0.83, "click_rate": 0.86},
+#                     "refined_finish": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91}
+#                 },
+#                 "style_tags": {
+#                     "elevated": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "refined_casual": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89},
+#                     "premium_style": {"seo_score": 0.91, "buy_rate": 0.85, "click_rate": 0.88}
+#                 },
+#                 "brand_tags": {
+#                     "casual_dior": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "premium_designer": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "color_tags": {
+#                     "premium_white": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "luxe_trim": {"seo_score": 0.94, "buy_rate": 0.87, "click_rate": 0.90}
+#                 }
+#             }
+#         }
+#     },
+#         # Continuing Variation 7 - Emphasis on Designer Collection
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "designer_collection": {
+#                 "category_tags": {
+#                     "designer_wear": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "collection_piece": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "runway_casual": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "attribute_tags": {
+#                     "designer_cotton": {"seo_score": 0.29, "buy_rate": 0.85, "click_rate": 0.88},
+#                     "collection_fabric": {"seo_score": 0.26, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "designer_fit": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "style_tags": {
+#                     "runway_inspired": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "collection_style": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "designer_casual": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89}
+#                 },
+#                 "brand_tags": {
+#                     "dior_collection": {"seo_score": 0.99, "buy_rate": 0.93, "click_rate": 0.96},
+#                     "paris_designer": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94}
+#                 },
+#                 "color_tags": {
+#                     "designer_white": {"seo_score": 0.96, "buy_rate": 0.89, "click_rate": 0.92},
+#                     "collection_trim": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 8 - Emphasis on Seasonal Collection
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "seasonal_luxury": {
+#                 "category_tags": {
+#                     "summer_collection": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "seasonal_wear": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93},
+#                     "resort_style": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "attribute_tags": {
+#                     "summer_cotton": {"seo_score": 0.28, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "seasonal_blend": {"seo_score": 0.25, "buy_rate": 0.83, "click_rate": 0.86},
+#                     "lightweight_cut": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91}
+#                 },
+#                 "style_tags": {
+#                     "summer_luxury": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "resort_wear": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89},
+#                     "seasonal_style": {"seo_score": 0.91, "buy_rate": 0.85, "click_rate": 0.88}
+#                 },
+#                 "brand_tags": {
+#                     "dior_summer": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "seasonal_luxury": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "color_tags": {
+#                     "summer_white": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "seasonal_trim": {"seo_score": 0.94, "buy_rate": 0.87, "click_rate": 0.90}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 9 - Emphasis on Youth Culture
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "youth_luxury": {
+#                 "category_tags": {
+#                     "youth_culture": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "gen_z_style": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "modern_youth": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "attribute_tags": {
+#                     "youth_fabric": {"seo_score": 0.27, "buy_rate": 0.85, "click_rate": 0.88},
+#                     "trendy_blend": {"seo_score": 0.24, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "modern_fit": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "style_tags": {
+#                     "youth_trend": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "gen_z_fashion": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "trendy_casual": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89}
+#                 },
+#                 "brand_tags": {
+#                     "young_dior": {"seo_score": 0.99, "buy_rate": 0.93, "click_rate": 0.96},
+#                     "youth_luxury": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94}
+#                 },
+#                 "color_tags": {
+#                     "fresh_white": {"seo_score": 0.96, "buy_rate": 0.89, "click_rate": 0.92},
+#                     "youth_contrast": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91}
+#                 }
+#             }
+#         }
+#     },
+
+#     # Variation 10 - Emphasis on Limited Edition
+#     {
+#         "image_url": "https://avjr5j-0b.myshopify.com/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426",
+#         "tags": {
+#             "limited_luxury": {
+#                 "category_tags": {
+#                     "limited_edition": {"seo_score": 0.98, "buy_rate": 0.92, "click_rate": 0.95},
+#                     "exclusive_piece": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94},
+#                     "collector_item": {"seo_score": 0.96, "buy_rate": 0.90, "click_rate": 0.93}
+#                 },
+#                 "attribute_tags": {
+#                     "exclusive_cotton": {"seo_score": 0.29, "buy_rate": 0.85, "click_rate": 0.88},
+#                     "limited_fabric": {"seo_score": 0.26, "buy_rate": 0.84, "click_rate": 0.87},
+#                     "special_finish": {"seo_score": 0.95, "buy_rate": 0.89, "click_rate": 0.92}
+#                 },
+#                 "style_tags": {
+#                     "collector_edition": {"seo_score": 0.94, "buy_rate": 0.88, "click_rate": 0.91},
+#                     "exclusive_style": {"seo_score": 0.93, "buy_rate": 0.87, "click_rate": 0.90},
+#                     "limited_design": {"seo_score": 0.92, "buy_rate": 0.86, "click_rate": 0.89}
+#                 },
+#                 "brand_tags": {
+#                     "dior_limited": {"seo_score": 0.99, "buy_rate": 0.93, "click_rate": 0.96},
+#                     "exclusive_luxury": {"seo_score": 0.97, "buy_rate": 0.91, "click_rate": 0.94}
+#                 },
+#                 "color_tags": {
+#                     "exclusive_white": {"seo_score": 0.96, "buy_rate": 0.89, "click_rate": 0.92},
+#                     "limited_trim": {"seo_score": 0.95, "buy_rate": 0.88, "click_rate": 0.91}
+#                 }
+#             }
+#         }
+#     }
+# ]
         
         # Prepare and fine-tune
-        image_urls = [example["image_url"] for example in training_examples]
-        ground_truth_tags = [example["tags"] for example in training_examples]
+        # image_urls = [example["image_url"] for example in training_examples]
+        # ground_truth_tags = [example["tags"] for example in training_examples]
         
-        print("Preparing training data...")
-        training_data = tagger.prepare_training_data(image_urls, ground_truth_tags)
+        # print("Preparing training data...")
+        # training_data = tagger.prepare_training_data(image_urls, ground_truth_tags)
         
-        if training_data:
-            print(f"Number of training examples: {len(training_data)}")
-            result = tagger.fine_tune(
-                training_data=training_data,
-                model_name="gpt-4o-2024-08-06"
-            )
+        # if training_data:
+        #     print(f"Number of training examples: {len(training_data)}")
+        #     result = tagger.fine_tune(
+        #         training_data=training_data,
+        #         model_name="gpt-4o-2024-08-06"
+        #     )
             
-            print("\nFine-tuning result:")
-            print(json.dumps(result, indent=2, cls=CustomJSONEncoder))
+        #     print("\nFine-tuning result:")
+        #     print(json.dumps(result, indent=2, cls=CustomJSONEncoder))
             
-            if "error" not in result:
-                print("\nTesting model...")
-                test_tags = tagger.generate_tags(shop_image_url)
-                print("\nGenerated tags:")
-                print(json.dumps(test_tags, indent=2))
-                test_tags = tagger.generate_tags(shop_image_url2)
-                print("\nGenerated tags:")
-                print(json.dumps(test_tags, indent=2))
-        else:
-            print("No valid training data generated")
+            # if "error" not in result:
+        print("\nTesting model...")
+        test_tags = tagger.generate_tags(shop_image_url)
+        print("\nGenerated tags:")
+        print(json.dumps(test_tags, indent=2))
+        test_tags = tagger.generate_tags(shop_image_url2)
+        print("\nGenerated tags:")
+        print(json.dumps(test_tags, indent=2))
+        # else:
+        #     print("No valid training data generated")
             
     except Exception as e:
         print(f"\nError in main: {str(e)}")
