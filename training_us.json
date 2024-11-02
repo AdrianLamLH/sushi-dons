@@ -1,0 +1,661 @@
+{
+  "leopard_blouse_01": {
+    "category_tags": {
+      "trendy_blouse": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "mob_wife_collection": {
+        "seo_score": 0.98,
+        "buy_rate": 0.93,
+        "click_rate": 0.95
+      },
+      "statement_tops": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "bold_leopard": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "caramel_black": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "silky_texture": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "quiet_luxury": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "old_money_aesthetic": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "rich_mom_style": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      }
+    },
+    "usage_tags": {
+      "brunch_approved": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      },
+      "coffee_run": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    }
+  },
+
+  "leopard_blouse_02": {
+    "category_tags": {
+      "luxury_basic": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "tiktok_viral": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "designer_inspired": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "neutral_leopard": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "collared_blouse": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "loose_fit": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "clean_girl": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "coastal_grandma": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "pinterest_core": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "desk_to_dinner": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "vacation_ready": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+
+  "leopard_blouse_03": {
+    "category_tags": {
+      "influencer_pick": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "wardrobe_essential": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "versatile_top": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "oversized_fit": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "button_down": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "lightweight": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "y2k_revival": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "model_off_duty": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "indie_sleaze": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "layering_piece": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "weekend_vibes": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+
+  "leopard_blouse_04": {
+    "category_tags": {
+      "viral_fashion": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "instagram_favorite": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "bestseller": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "soft_fabric": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "classic_print": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "easy_care": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "soft_girl": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "vanilla_girl": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "cool_girl": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "day_to_night": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "date_night": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+
+  "leopard_blouse_05": {
+    "category_tags": {
+      "elevated_basics": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "must_have": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "everyday_luxe": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "premium_feel": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "long_sleeve": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "versatile": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "stealth_wealth": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "minimal_chic": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "business_casual": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "workwear": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "weekender": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+  
+  "leopard_blouse_06": {
+    "category_tags": {
+      "power_blouse": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "bougie_basics": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "office_approved": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    },
+    "attribute_tags": {
+      "spotted_print": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "flowy_fit": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      },
+      "wrinkle_resistant": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "corporate_baddie": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "executive_realness": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "boss_aesthetic": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "zoom_ready": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "meeting_essential": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+
+  "leopard_blouse_07": {
+    "category_tags": {
+      "content_creator_fave": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "fall_essential": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "transitional_piece": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "neutral_print": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "pocket_detail": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "button_up": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "bella_hadid_core": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "rich_aunt": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "european_luxury": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "boardroom_to_bar": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "power_lunch": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+
+  "leopard_blouse_08": {
+    "category_tags": {
+      "trending_now": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "fall_collection": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "capsule_wardrobe": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "classic_cut": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "structured_shoulder": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "casual_luxe": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "nyc_girl": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "studio_54": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "retro_revival": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "gallery_hopping": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "social_season": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+
+  "leopard_blouse_09": {
+    "category_tags": {
+      "celebrity_style": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "fashion_editor_pick": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "closet_staple": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "timeless_print": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "blogger_favorite": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "travel_friendly": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "soho_house_ready": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "hamptons_casual": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "uptown_girl": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "jet_set_style": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "resort_wear": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  },
+
+  "leopard_blouse_10": {
+    "category_tags": {
+      "investment_piece": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.94
+      },
+      "year_round_style": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "wardrobe_builder": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "attribute_tags": {
+      "luxe_leopard": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "easy_elegance": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      },
+      "desk_to_drinks": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.89
+      }
+    },
+    "style_tags": {
+      "west_village_vibe": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "manhattan_maven": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "legacy_luxe": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    },
+    "usage_tags": {
+      "city_life": {
+        "seo_score": 0.96,
+        "buy_rate": 0.90,
+        "click_rate": 0.93
+      },
+      "urban_essential": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.90
+      }
+    }
+  }
+}

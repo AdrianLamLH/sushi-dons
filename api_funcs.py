@@ -1,62 +1,63 @@
-# Import required libraries
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, HttpUrl
+from typing import Dict, Optional, Union
 import openai
-from typing import Dict, List
 import json
-import os
 from datetime import datetime
+import os
 from dotenv import load_dotenv
-import time
 
+# Load environment variables
 load_dotenv()
 
-# Custom JSON encoder to handle datetime serialization
-class CustomJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, datetime):
-            return obj.isoformat()
-        try:
-            return super().default(obj)
-        except TypeError:
-            return str(obj)
+# Initialize FastAPI app
+app = FastAPI()
 
-# Main class for generating SEO tags using OpenAI's vision model
+# Initialize OpenAI client
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+class ImageRequest(BaseModel):
+    image_url: HttpUrl
+    location: Optional[str] = None
+
 class OpenAIProductTagger:
-    def __init__(self, api_key: str):
-        openai.api_key = api_key
+    def __init__(self):
+        # Updated to use the correct model name
         self.vision_model = "gpt-4o-2024-08-06"
         
-        # Load system prompt from file
         with open("systemprompt.txt", "r") as file:
-            sys_prompt = file.read()
-        self.sys_prompt = sys_prompt
+            self.sys_prompt = file.read()
         self.system_prompt = self.sys_prompt
-        self.user_prompt_template = "Analyze this image and generate a NEW SEO tags for it USING THE TRAINING DATA. GET THE SEO_SCORES RIGHT!"
+        self.user_prompt_template = "Analyze this image and generate NEW SEO tags for it USING THE TRAINING DATA. GET THE SEO_SCORES RIGHT! GENERATE NEW TAGS IN SAME LANGUAGE as the training data. DO NOT COPY THE EXAMPLES DIRECTLY. USE TAGS THAT FOLLOW FASHION TRENDS OF THE SPECIFIC GEOGRAPHIC STYLE."
 
-    # Combine system prompt with training examples
-    def _build_system_prompt(self, training_examples) -> str:
-        return (
-            f"{self.sys_prompt}\n\n"
-            f"INFER FROM THESE EXAMPLES of GOOD and BAD SEO_SCORE tags for this item BUT DO NOT DIRECTLY COPY:\n\n{training_examples}"
-        )
-
-    # Generate SEO tags for an image using the vision model
-    def generate_tags(self, image_url: str, training_examples=[]) -> Dict:
+    def generate_tags(self, image_url: str, training_examples: Dict, location: str) -> Dict:
         try:
-            self.system_prompt = self._build_system_prompt(training_examples)
-            # Make API call to OpenAI
-            response = openai.chat.completions.create(
+            self.system_prompt = (
+                f"{self.sys_prompt}\n\n"
+                f"INFER FROM THESE EXAMPLES of GOOD and BAD SEO_SCORE tags for this item BUT DO NOT DIRECTLY COPY:\n\n{training_examples}"
+            )
+
+            response = client.chat.completions.create(
                 model=self.vision_model,
                 messages=[
                     {"role": "system", "content": self.system_prompt},
                     {
                         "role": "user",
                         "content": [
-                            {"type": "text", "text": self.user_prompt_template},
+                            {"type": "text", "text": self.user_prompt_template + f"USE {'JAPANESE' if location == 'jp' else 'AMERICAN'} FASHION SPECIFIC TAGS THAT ARE GEOGRAPHICALLY RELEVANT."},
                             {
                                 "type": "image_url",
-                                "image_url": {
-                                    "url": image_url,
-                                },
+                                "image_url": {"url": str(image_url)},
                             },
                         ],
                     }
@@ -66,127 +67,120 @@ class OpenAIProductTagger:
                 response_format={"type": "json_object"}
             )
             
-            # Parse and validate response
             content = response.choices[0].message.content
-            tags = json.loads(self._clean_json_response(content))
-            
-            if not self._validate_tag_structure(tags):
-                raise ValueError("Invalid tag structure in response")
-                
-            return tags
+            print(f"Training data: {training_examples}")  # Debug logging
+            return json.loads(content)
             
         except Exception as e:
-            return {"error": f"Generation failed: {str(e)}"}
-
-    # Clean JSON response by removing code block markers if present
-    def _clean_json_response(self, response: str) -> str:
-        response = response.strip()
-        if response.startswith("```"):
-            response = response[response.find("{"):response.rfind("}") + 1]
-        return response
-
-    # Validate the structure of generated tags
-    def _validate_tag_structure(self, tags: Dict) -> bool:
-        if not isinstance(tags, dict):
-            return False
-            
-        # Define required fields for validation
-        required_categories = ['category_tags', 'attribute_tags', 'style_tags', 'usage_tags']
-        required_fields = ['seo_score', 'buy_rate', 'click_rate']
-        
-        # Check if all required categories and fields are present
-        for product_data in tags.values():
-            if not all(category in product_data for category in required_categories):
-                return False
-                
-            for category_data in product_data.values():
-                if not isinstance(category_data, dict):
-                    return False
-                    
-                for tag_data in category_data.values():
-                    if not all(field in tag_data for field in required_fields):
-                        return False
-                        
-                    # Validate score ranges (0 to 1)
-                    if not all(0 <= tag_data[field] <= 1 for field in required_fields):
-                        return False
-                        
-        return True
-    
-    # Generate product description using the vision model
-    def generate_description(self, image_url: str, training_examples=[]) -> str:
+            print(f"Error in generate_tags: {str(e)}")  # Add logging
+            raise HTTPException(status_code=500, detail=str(e))
+    def generate_description(self, tags: Dict, location: str) -> str:
         try:
-            # Build system prompt for description generation
-            self.system_prompt = (
-                f"You are a e-commerce product tagger specialized in SEO optimization. Your task is to generate a NEW product description using ONLY tags from the training data that have HIGH SEO_SCORES (0.7 or above) as inspiration. COMPLETELY IGNORE all tags with lower SEO scores. Look at the training data and identify only the highest performing SEO tags, then use those specific terms and concepts to craft a compelling description. The description should feel natural and engaging while incorporating these high-performing SEO elements."
-                f" Here are the training examples containing both high and low SEO score tags (remember to ONLY use the HIGH SEO-SCORING ones as inspiration):\n\n{training_examples}"
-            )
-
-            # Make API call for description generation
-            response = openai.chat.completions.create(
-                model=self.vision_model,
-                messages=[
-                    {"role": "system", "content": self.system_prompt},
-                    {
-                        "role": "user",
-                        "content": [
-                            {"type": "text", "text": "Generate a brief NEW product description for this item USING THE TRAINING DATA. GET THE SEO_SCORES RIGHT! INCORPORATE ONLY HIGH SEO_SCORE TAGS FROM THE TRAINING DATA."},
-                            {
-                                "type": "image_url",
-                                "image_url": {
-                                    "url": image_url,
-                                },
-                            },
-                        ],
-                    }
-                ],
-                max_tokens=2000,
-                temperature=0.7,
-                response_format={"type": "text"}
+            prompt = f"""Generate a compelling product description in {'Japanese (AND INCLUDE AN ENGLISH TRANSLATION)' if location == 'jp' else 'English'} based on these SEO-optimized tags:
+            {json.dumps(tags, indent=2)}
+            
+            Focus on the tags with high SEO scores (0.7 or above) to create a natural, engaging description that incorporates the key selling points. DO NOT MENTION THE SEO SCORES IN THE DESCRIPTION.
+            The description should be 2-3 sentences long and maintain the cultural context of the {location.upper()} market."""
+            
+            response = client.chat.completions.create(
+                model="gpt-4",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=200,
+                temperature=0.7
             )
             
-            content = response.choices[0].message.content
-            description = content.strip()
-            return description
+            return response.choices[0].message.content
             
         except Exception as e:
-            return {"error": f"Generation failed: {str(e)}"}
+            print(f"Error generating description: {str(e)}")
+            raise HTTPException(status_code=500, detail=str(e))
 
-# Wrapper function to regenerate tags for a given image
-def regenerate_tags(image_url: str, training_examples: Dict):
+# Initialize tagger
+tagger = OpenAIProductTagger()
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Load training data at startup
+@app.on_event("startup")
+async def load_training_data():
+    global us_tag_history, jp_tag_history
     try:
-        tagger = OpenAIProductTagger(os.environ.get("OPENAI_API_KEY"))
-        tags = tagger.generate_tags(image_url, training_examples)
-        print("\nGenerated new tags:")
-        print(json.dumps(tags, indent=2))
-        return tags
+        # Change to proper error handling with default data
+        try:
+            us_path = os.path.join(BASE_DIR, "training_us.json")
+            with open(us_path, "r") as file:  # Changed from .jsonl to .json
+                us_tag_history = json.load(file)
+        except Exception as e:
+            print(f"Error loading US training data: {str(e)}")
+            # Provide default US training data
+            us_tag_history = {
+                "dior_tee_1": {
+                    "category_tags": {
+                        "designer_tshirt": {
+                            "seo_score": 0.98,
+                            "buy_rate": 0.85,
+                            "click_rate": 0.92
+                        }
+                    },
+                    "attribute_tags": {},
+                    "style_tags": {},
+                    "usage_tags": {}
+                }
+            }
+
+        try:
+            jp_path = os.path.join(BASE_DIR, "training_jp.json")
+            with open(jp_path, "r") as file:  # Changed from .jsonl to .json
+                jp_tag_history = json.load(file)
+        except Exception as e:
+            print(f"Error loading JP training data: {str(e)}")
+            # Provide default JP training data
+            jp_tag_history = us_tag_history  # Use same default data for now
             
     except Exception as e:
-        print(f"\nError in main: {str(e)}")
-        import traceback
-        traceback.print_exc()
+        print(f"Error in load_training_data: {str(e)}")
+# @app.post("/generate")
+# async def generate_tags_and_description(request: ImageRequest):
+#     try:
+#         # Select training data based on location
+#         training_data = us_tag_history if request.location == "us" else jp_tag_history if request.location == "jp" else {}
+        
+#         # Generate tags (no longer async)
+#         tags = tagger.generate_tags(str(request.image_url), training_data)
+#         # print(f"Using {request.location} training data for generation")  # Debug logging
+#         # print(f"Tags: {tags}")  # Debug logging
+#         # print(f"Location: {request.location}")  # Debug logging
+#         # print(f"training_data: {training_data}")  # Debug logging
 
-# Wrapper function to regenerate description for a given image
-def regenerate_description(image_url: str, training_examples: Dict):
+#         return {"tags": tags}
+        
+#     except Exception as e:
+#         print(f"Error in generate endpoint: {str(e)}")  # Add logging
+#         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/generate")
+async def generate_tags_and_description(request: ImageRequest):
     try:
-        tagger = OpenAIProductTagger(os.environ.get("OPENAI_API_KEY"))
-        new_description = tagger.generate_description(image_url, training_examples)
-        print("\nGenerated new description:")
-        print(new_description)
-        return new_description
-            
+        # Select training data based on location
+        training_data = us_tag_history if request.location == "us" else jp_tag_history if request.location == "jp" else {}
+        
+        # Generate tags
+        tags = tagger.generate_tags(str(request.image_url), training_data, request.location)
+        
+        # Generate description based on the tags
+        description = tagger.generate_description(tags, request.location)
+        
+        return {
+            "tags": tags,
+            "description": description,
+            "location": request.location
+        }
+        
     except Exception as e:
-        print(f"\nError in main: {str(e)}")
-        import traceback
-        traceback.print_exc()
+        print(f"Error in generate endpoint: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
 
-
-
-# Example usage
-if __name__ == "__main__":
-    # Load training data from file
-    with open("training.jsonl", "r") as file:
-        tag_history = json.load(file)
-    # Generate new tags to update your tags and description for the sample image
-    new_tag_history = tag_history | regenerate_tags(image_url="https://www.sushidon.shop/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426", training_examples=tag_history)
-    new_description = regenerate_description(image_url="https://www.sushidon.shop/cdn/shop/files/513T07B4222X0810_E01.webp?v=1729911692&width=1426", training_examples=new_tag_history)
+# Health check endpoint
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
