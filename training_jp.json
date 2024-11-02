@@ -1,0 +1,517 @@
+{
+  "cheetah_print_shirt_1": {
+    "category_tags": {
+      "アニマル柄トップス (Animal Print Top)": {
+        "seo_score": 0.97,
+        "buy_rate": 0.9,
+        "click_rate": 0.93
+      },
+      "ステートメントシャツ (Statement Shirt)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.89
+      }
+    },
+    "attribute_tags": {
+      "チーター柄 (Cheetah Print)": {
+        "seo_score": 0.98,
+        "buy_rate": 0.92,
+        "click_rate": 0.95
+      },
+      "ボールドパターン (Bold Pattern)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.9
+      },
+      "柔らかい素材 (Soft Material)": {
+        "seo_score": 0.85,
+        "buy_rate": 0.8,
+        "click_rate": 0.82
+      }
+    },
+    "style_tags": {
+      "ワイルドスタイル (Wild Style)": {
+        "seo_score": 0.95,
+        "buy_rate": 0.9,
+        "click_rate": 0.91
+      },
+      "ファッションフォワード (Fashion Forward)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.89
+      },
+      "ボールドカジュアル (Bold Casual)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      }
+    },
+    "usage_tags": {
+      "夜の外出用 (Evening Wear)": {
+        "seo_score": 0.96,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "パーティー対応 (Party Ready)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.88,
+        "click_rate": 0.91
+      }
+    }
+  },
+  "cheetah_print_shirt_2": {
+    "category_tags": {
+      "アニマル柄ブラウス (Animal Print Blouse)": {
+        "seo_score": 0.96,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      },
+      "アイコニックシャツ (Iconic Shirt)": {
+        "seo_score": 0.95,
+        "buy_rate": 0.87,
+        "click_rate": 0.9
+      }
+    },
+    "attribute_tags": {
+      "レトロチーター柄 (Retro Cheetah Print)": {
+        "seo_score": 0.97,
+        "buy_rate": 0.9,
+        "click_rate": 0.94
+      },
+      "ヴィンテージフィット (Vintage Fit)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.89
+      },
+      "柔らかい生地 (Soft Fabric)": {
+        "seo_score": 0.86,
+        "buy_rate": 0.82,
+        "click_rate": 0.84
+      }
+    },
+    "style_tags": {
+      "ギャルファッション (Gyaru Fashion)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.89,
+        "click_rate": 0.91
+      },
+      "ストリート系 (Street Style)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.9
+      }
+    },
+    "usage_tags": {
+      "デートナイト (Date Night)": {
+        "seo_score": 0.95,
+        "buy_rate": 0.9,
+        "click_rate": 0.92
+      },
+      "週末おしゃれ (Weekend Chic)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.89,
+        "click_rate": 0.91
+      }
+    }
+  },
+  "cheetah_print_shirt_3": {
+    "category_tags": {
+      "動物柄シャツ (Animal Print Shirt)": {
+        "seo_score": 0.95,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      },
+      "アーバンスタイルシャツ (Urban Style Shirt)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      }
+    },
+    "attribute_tags": {
+      "クラシックチーター柄 (Classic Cheetah Print)": {
+        "seo_score": 0.97,
+        "buy_rate": 0.91,
+        "click_rate": 0.93
+      },
+      "ゆったりフィット (Relaxed Fit)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.85,
+        "click_rate": 0.88
+      }
+    },
+    "style_tags": {
+      "レトロカジュアル (Retro Casual)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      },
+      "ハイファッション (High Fashion)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      }
+    },
+    "usage_tags": {
+      "カフェタイム (Cafe Outing)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      },
+      "インスタ映え (Instagram Ready)": {
+        "seo_score": 0.95,
+        "buy_rate": 0.89,
+        "click_rate": 0.92
+      }
+    }
+  },
+  "cheetah_print_shirt_4": {
+    "category_tags": {
+      "ヒョウ柄ブラウス (Leopard Print Blouse)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      },
+      "アーバンカジュアル (Urban Casual)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      }
+    },
+    "attribute_tags": {
+      "クラシックパターン (Classic Pattern)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      },
+      "サテン素材 (Satin Material)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.84,
+        "click_rate": 0.87
+      }
+    },
+    "style_tags": {
+      "ガーリーエレガント (Girly Elegant)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.89
+      },
+      "シンプルモード (Simple Mode)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.87,
+        "click_rate": 0.88
+      }
+    },
+    "usage_tags": {
+      "仕事でも使える (Office-Appropriate)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      },
+      "友達とおしゃれランチ (Stylish Lunch with Friends)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.89,
+        "click_rate": 0.91
+      }
+    }
+  },
+  "cheetah_print_shirt_5": {
+    "category_tags": {
+      "ヒョウ柄トップス (Leopard Print Top)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      },
+      "ヴィンテージシャツ (Vintage Shirt)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      }
+    },
+    "attribute_tags": {
+      "ハイカラー (High Collar)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.85,
+        "click_rate": 0.87
+      },
+      "ルーズフィット (Loose Fit)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.84,
+        "click_rate": 0.86
+      }
+    },
+    "style_tags": {
+      "ハラジュク系 (Harajuku Style)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      },
+      "レトロファッション (Retro Fashion)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.87,
+        "click_rate": 0.88
+      }
+    },
+    "usage_tags": {
+      "フェスティバルスタイル (Festival Style)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.89,
+        "click_rate": 0.91
+      },
+      "週末の外出 (Weekend Outing)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      }
+    }
+  },
+  "cheetah_print_shirt_6": {
+    "category_tags": {
+      "ネオギャル (Neo-Gyaru)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.89,
+        "click_rate": 0.91
+      },
+      "ボヘミアンシャツ (Bohemian Shirt)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      }
+    },
+    "attribute_tags": {
+      "ヴィンテージ感 (Vintage Feel)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      },
+      "リラックスシルエット (Relaxed Silhouette)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.85,
+        "click_rate": 0.87
+      }
+    },
+    "style_tags": {
+      "大人かわいい (Otona Kawaii)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.89
+      },
+      "フェミニンエッジ (Feminine Edge)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.87,
+        "click_rate": 0.88
+      }
+    },
+    "usage_tags": {
+      "フォトジェニック (Photogenic)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.9,
+        "click_rate": 0.92
+      },
+      "女子会ファッション (Girls' Night Fashion)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      }
+    }
+  },
+  "cheetah_print_shirt_7": {
+    "category_tags": {
+      "ユニークプリントトップス (Unique Print Top)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      },
+      "ストリートファッション (Street Fashion)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      }
+    },
+    "attribute_tags": {
+      "ダメージ加工 (Distressed Look)": {
+        "seo_score": 0.88,
+        "buy_rate": 0.84,
+        "click_rate": 0.86
+      },
+      "アシンメトリー (Asymmetrical)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      }
+    },
+    "style_tags": {
+      "パンクロック (Punk Rock)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      },
+      "ヴィンテージカジュアル (Vintage Casual)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      }
+    },
+    "usage_tags": {
+      "ライブイベント (Live Events)": {
+        "seo_score": 0.94,
+        "buy_rate": 0.9,
+        "click_rate": 0.92
+      },
+      "ファッションショー (Fashion Show)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.89,
+        "click_rate": 0.91
+      }
+    }
+  },
+  "cheetah_print_shirt_8": {
+    "category_tags": {
+      "ヒョウ柄アウター (Leopard Print Outerwear)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.85,
+        "click_rate": 0.88
+      },
+      "ユースカジュアル (Youth Casual)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.84,
+        "click_rate": 0.87
+      }
+    },
+    "attribute_tags": {
+      "オーバーサイズ (Oversized)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      },
+      "シースルー (Sheer)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.85,
+        "click_rate": 0.87
+      }
+    },
+    "style_tags": {
+      "カジュアルシック (Casual Chic)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.89
+      },
+      "リラックスストリート (Relaxed Street)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.87,
+        "click_rate": 0.88
+      }
+    },
+    "usage_tags": {
+      "日常使い (Everyday Wear)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      },
+      "レイヤードスタイル (Layered Style)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.89,
+        "click_rate": 0.91
+      }
+    }
+  },
+  "cheetah_print_shirt_9": {
+    "category_tags": {
+      "ロリータ風 (Lolita Style)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.85,
+        "click_rate": 0.87
+      },
+      "レトロヴィンテージ (Retro Vintage)": {
+        "seo_score": 0.88,
+        "buy_rate": 0.84,
+        "click_rate": 0.86
+      }
+    },
+    "attribute_tags": {
+      "パフスリーブ (Puff Sleeves)": {
+        "seo_score": 0.87,
+        "buy_rate": 0.83,
+        "click_rate": 0.85
+      },
+      "フリルディテール (Frill Details)": {
+        "seo_score": 0.85,
+        "buy_rate": 0.82,
+        "click_rate": 0.84
+      }
+    },
+    "style_tags": {
+      "ドーリーファッション (Dolly Fashion)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      },
+      "ガーリーロマンチック (Girly Romantic)": {
+        "seo_score": 0.91,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      }
+    },
+    "usage_tags": {
+      "写真撮影用 (For Photoshoots)": {
+        "seo_score": 0.93,
+        "buy_rate": 0.9,
+        "click_rate": 0.92
+      },
+      "個性的なコーディネート (Unique Coordination)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      }
+    }
+  },
+  "cheetah_print_shirt_10": {
+    "category_tags": {
+      "おしゃれ系シャツ (Fashionable Shirt)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.86,
+        "click_rate": 0.88
+      },
+      "コア系ストリート (Core Street Style)": {
+        "seo_score": 0.88,
+        "buy_rate": 0.84,
+        "click_rate": 0.86
+      }
+    },
+    "attribute_tags": {
+      "ストレッチ素材 (Stretch Material)": {
+        "seo_score": 0.86,
+        "buy_rate": 0.82,
+        "click_rate": 0.84
+      },
+      "ショート丈 (Cropped Length)": {
+        "seo_score": 0.85,
+        "buy_rate": 0.83,
+        "click_rate": 0.85
+      }
+    },
+    "style_tags": {
+      "バッドガールスタイル (Bad Girl Style)": {
+        "seo_score": 0.87,
+        "buy_rate": 0.84,
+        "click_rate": 0.86
+      },
+      "ファンシーカジュアル (Fancy Casual)": {
+        "seo_score": 0.89,
+        "buy_rate": 0.85,
+        "click_rate": 0.87
+      }
+    },
+    "usage_tags": {
+      "夜のデート (Night Date)": {
+        "seo_score": 0.9,
+        "buy_rate": 0.87,
+        "click_rate": 0.89
+      },
+      "おしゃれな集まり (Fashionable Gathering)": {
+        "seo_score": 0.92,
+        "buy_rate": 0.88,
+        "click_rate": 0.9
+      }
+    }
+  }
+}
