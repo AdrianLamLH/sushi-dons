@@ -56,7 +56,7 @@ OPENAI_API_KEY=your_api_key_here
 
 1. Install Node.js dependencies:
 ```bash
-cd frontend
+cd frontend/sushidons
 npm install
 # or
 yarn install
