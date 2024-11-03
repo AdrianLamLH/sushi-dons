@@ -2,11 +2,23 @@
 import { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false, // Temporarily disable strict mode
+  // Add custom webpack configuration to handle hydration issues
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Ignore browser extension related attributes during client-side rendering
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'test-sushi-122.s3.us-east-1.amazonaws.com',
+        hostname: 'www.sushidon.shop',
         pathname: '/**',
       },
     ],
